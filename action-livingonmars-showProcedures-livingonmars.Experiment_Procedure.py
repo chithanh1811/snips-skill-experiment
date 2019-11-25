@@ -23,10 +23,10 @@ def show_procedure(hermes, intent_message):
     print("The user is asking to show the experiment list")
 
     order_number = 0
-    sentence = ""
+    sentence = "Select"
     for procedure in procedures:
         order_number += 1
-        sentence += "Select " + str(order_number) + " for " + procedure["title"] + ". "
+        sentence += str(order_number) + ". " + procedure["title"] + ". "
 
     return hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_CANCEL, INTENT_CHOOSE])
 
