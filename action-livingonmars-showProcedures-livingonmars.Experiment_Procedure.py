@@ -28,7 +28,7 @@ def show_procedure(hermes, intent_message):
         order_number += 1
         sentence += "Select " + str(order_number) + " for the experiment " + procedure["title"] + ". "
 
-    return hermes.publish_continue_session(intent_message.session_id, "Which experiment do you want to start?", [INTENT_RANDOM, INTENT_CANCEL, INTENT_CHOOSE])
+    return hermes.publish_continue_session(intent_message.session_id, "Which experiment do you want to start?", [INTENT_CANCEL, INTENT_CHOOSE])
 
 def randomize_procedure(hermes, intent_message):
     print("The user is asking to start a random experiment")
