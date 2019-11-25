@@ -23,7 +23,7 @@ def show_procedure(hermes, intent_message):
         procedures = json.load(database_response)
 
     order_number = 0
-    sentence = None
+    sentence = ""
     for procedure in procedures:
         order_number += 1
         sentence += "Select " + str(order_number) + "for the experiment " + procedure["title"] + ". "
