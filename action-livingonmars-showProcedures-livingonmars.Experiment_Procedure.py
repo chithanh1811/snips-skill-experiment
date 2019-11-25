@@ -26,9 +26,9 @@ def show_procedure(hermes, intent_message):
     sentence = ""
     for procedure in procedures:
         order_number += 1
-        sentence += "Select " + str(order_number) + "for the experiment " + procedure["title"] + ". "
+        sentence += "Select " + str(order_number) + " for the experiment " + procedure["title"] + ". "
 
-    hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_RANDOM, INTENT_CANCEL, INTENT_CHOOSE])
+    return hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_RANDOM, INTENT_CANCEL, INTENT_CHOOSE])
 
 with Hermes(MQTT_ADDR) as h:
     h.subscribe_intent(INTENT_SHOW, show_procedure).start()
