@@ -31,4 +31,4 @@ def show_procedure(hermes, intent_message):
     hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_RANDOM, INTENT_CANCEL, INTENT_CHOOSE])
 
 with Hermes(MQTT_ADDR) as h:
-    h.subscribe_intent(INTENT_SHOW, show_procedure).start()
+    h.subscribe_intents(INTENT_SHOW, show_procedure).start()
