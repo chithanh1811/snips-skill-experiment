@@ -19,7 +19,7 @@ INTENT_SHOW = "livingonmars:showProcedures"
 def show_procedure(hermes, intent_message):
     print("The user is asking to show the experiment list")
 
-    with open('sample-response') as database_response:
+    with open('sample-response.json') as database_response:
         procedures = json.load(database_response)
 
     order_number = 0
