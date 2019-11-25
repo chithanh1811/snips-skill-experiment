@@ -40,7 +40,7 @@ def cancel_procedure(hermes, intent_message):
 
 def choose_procedure(hermes, intent_message):
     print("The user is choosing an experiment")
-    raw_choice = intent_message.slots[0].rawValue
+    raw_choice = intent_message.slots.firstChild.rawValue
     if raw_choice == "one":
         choice = 1
     elif raw_choice == "two":
