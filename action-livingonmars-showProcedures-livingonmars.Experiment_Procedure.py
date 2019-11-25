@@ -56,7 +56,7 @@ def choose_procedure(hermes, intent_message):
     else:
         choice = raw_choice
 
-    sentence = "You chose " + str(choice) + " " + str(procedures[choice - 1]) + ". Is that correct?"
+    sentence = "You chose " + str(choice) + " " + str(procedures[choice - 1]["title"]) + ". Is that correct?"
     return hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_CONFIRM, INTENT_CANCEL])
 
 def confirm_procedure(hermes, intent_message):
