@@ -40,7 +40,7 @@ def cancel_procedure(hermes, intent_message):
 
 def choose_procedure(hermes, intent_message):
     print("The user is choosing an experiment")
-    raw_choice = intent_message.slots.procedure.first()
+    raw_choice = intent_message.slots.procedure.first().value
     print(raw_choice)
     if raw_choice == "one":
         choice = 1
@@ -62,7 +62,7 @@ def choose_procedure(hermes, intent_message):
 
 def confirm_procedure(hermes, intent_message):
     print("The user is confirming to start an experiment")
-    raw_choice = intent_message.slots.confirmation.first().first().rawValue
+    raw_choice = intent_message.slots.confirmation.first().value
     if raw_choice == "yes":
         sentence = "Experiment started"
         return hermes.publish_end_session(intent_message.session_id, sentence)
