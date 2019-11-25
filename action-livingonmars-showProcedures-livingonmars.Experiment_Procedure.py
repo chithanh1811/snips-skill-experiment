@@ -28,7 +28,7 @@ def show_procedure(hermes, intent_message):
         order_number += 1
         sentence += "Select " + str(order_number) + " for the experiment " + procedure["title"] + ". "
 
-    return hermes.publish_continue_session(intent_message.session_id, "Which experiment do you want to choose?", [INTENT_RANDOM, INTENT_CANCEL, INTENT_CHOOSE])
+    return hermes.publish_continue_session(intent_message.session_id, "Which experiment do you want to start?", [INTENT_RANDOM, INTENT_CANCEL, INTENT_CHOOSE])
 
 def randomize_procedure(hermes, intent_message):
     print("The user is asking to start a random experiment")
@@ -40,7 +40,7 @@ def cancel_procedure(hermes, intent_message):
 
 def choose_procedure(hermes, intent_message):
     print("The user is choosing an experiment")
-    raw_choice = intent_message.slots.procedure.first.rawValue
+    raw_choice = intent_message.slots.procedure.first().rawValue
     if raw_choice == "one":
         choice = 1
     elif raw_choice == "two":
@@ -61,7 +61,7 @@ def choose_procedure(hermes, intent_message):
 
 def confirm_procedure(hermes, intent_message):
     print("The user is confirming to start an experiment")
-    raw_choice = intent_message.slots.confirmation.first.rawValue
+    raw_choice = intent_message.slots.confirmation.first().rawValue
     if raw_choice == "yes":
         sentence = "Experiment started"
         return hermes.publish_end_session(intent_message.session_id, sentence)
