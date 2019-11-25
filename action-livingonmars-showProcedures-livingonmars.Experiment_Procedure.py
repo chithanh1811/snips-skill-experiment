@@ -16,11 +16,11 @@ INTENT_CHOOSE = "livingonmars:chooseProcedure"
 INTENT_RANDOM = "livingonmars:randomizeProcedure"
 INTENT_SHOW = "livingonmars:showProcedures"
     
+with open('sample-response.json') as database_response:
+    procedures = json.load(database_response)
+
 def show_procedure(hermes, intent_message):
     print("The user is asking to show the experiment list")
-
-    with open('sample-response.json') as database_response:
-        procedures = json.load(database_response)
 
     order_number = 0
     sentence = ""
@@ -31,9 +31,6 @@ def show_procedure(hermes, intent_message):
     return hermes.publish_continue_session(intent_message.session_id, "Which experiment do you want to choose?", [INTENT_RANDOM, INTENT_CANCEL, INTENT_CHOOSE])
 
 def randomize_procedure(hermes, intent_message):
-    with open('sample-response') as database_response:
-        procedures = json.load(database_response)
-
     print("The user is asking to start a random experiment")
     return hermes.publish_continue_session(intent_message.session_id, "randomize", [INTENT_CONFIRM])
 
@@ -42,9 +39,6 @@ def cancel_procedure(hermes, intent_message):
     return hermes.publish_end_session(intent_message.session_id, sentence)
 
 def choose_procedure(hermes, intent_message):
-    with open('sample-response') as database_response:
-        procedures = json.load(database_response)
-
     print("The user is choosing an experiment")
     raw_choice = intent_message["slots"][0]["rawValue"]
     if raw_choice == "one":
@@ -66,9 +60,6 @@ def choose_procedure(hermes, intent_message):
     return hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_CONFIRM, INTENT_CANCEL])
 
 def confirm_procedure(hermes, intent_message):
-    with open('sample-response') as database_response:
-        procedures = json.load(database_response)
-
     print("The user is confirming to start an experiment")
     raw_choice = intent_message["slots"][0]["value"]["value"]
     if raw_choice == "yes":
