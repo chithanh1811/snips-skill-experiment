@@ -14,7 +14,7 @@ INTENT_CANCEL = "livingonmars:cancelProcedure"
 INTENT_CONFIRM = "livingonmars:confirmProcedure"
 INTENT_CHOOSE = "livingonmars:chooseProcedure"
 INTENT_RANDOM = "livingonmars:randomizeProcedure"
-INTENT_SHOW = "livingonmars:showProcedure"
+INTENT_SHOW = "livingonmars:showProcedures"
 
 def randomize_procedure(hermes, intent_message):
     with open('sample-response') as database_response:

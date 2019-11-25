@@ -15,7 +15,7 @@ INTENT_CANCEL = "livingonmars:cancelProcedure"
 INTENT_CONFIRM = "livingonmars:confirmProcedure"
 INTENT_CHOOSE = "livingonmars:chooseProcedure"
 INTENT_RANDOM = "livingonmars:randomizeProcedure"
-INTENT_SHOW = "livingonmars:showProcedure"
+INTENT_SHOW = "livingonmars:showProcedures"
 
 
 def cancel_procedure(hermes, intent_message):
