@@ -111,5 +111,5 @@ with Hermes(MQTT_ADDR) as h:
         .subscribe_intent(INTENT_CONFIRM, confirm_procedure) \
         .subscribe_intent(INTENT_CANCEL, cancel_procedure) \
         .subscribe_intent(INTENT_CHOOSE, choose_procedure) \
-        .subscribe_intent(INTENT_RANDOM, randomize_procedure)
+        .subscribe_intent(INTENT_RANDOM, randomize_procedure) \
         .start()
