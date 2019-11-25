@@ -28,7 +28,7 @@ def show_procedure(hermes, intent_message):
         order_number += 1
         sentence += "Select " + str(order_number) + " for the experiment " + procedure["title"] + ". "
 
-    return hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_RANDOM, INTENT_CANCEL, INTENT_CHOOSE])
+    return hermes.publish_continue_session(intent_message.session_id, "Which experiment do you want to choose?", [INTENT_RANDOM, INTENT_CANCEL, INTENT_CHOOSE])
 
 def randomize_procedure(hermes, intent_message):
     with open('sample-response') as database_response:
@@ -77,34 +77,6 @@ def confirm_procedure(hermes, intent_message):
     else:
         sentence = "Which experiment do you want to start?"
         return hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_CHOOSE, INTENT_RANDOM, INTENT_CANCEL])
-
-def session_started(hermes, session_started_message):
-    print("Session Started")
-
-    print("sessionID: {}".format(session_started_message.session_id))
-    print("session site ID: {}".format(session_started_message.site_id))
-    print("sessionID: {}".format(session_started_message.custom_data))
-
-    session_id = session_started_message.session_id
-    custom_data = session_started_message.custom_data
-
-    if custom_data:
-        if SessionsStates.get(custom_data):
-            SessionsStates[session_id] = SessionsStates[custom_data]
-            SessionsStates.pop(custom_data)
-
-
-def session_ended(hermes, session_ended_message):
-    print("Session Ended")
-    session_id = session_ended_message.session_id
-    session_site_id = session_ended_message.site_id
-
-    if SessionsStates.get(session_id) is not None:
-        hermes.publish_start_session_action(site_id=session_site_id,
-                                            session_init_text="",
-                                            session_init_intent_filter=INTENT_FILTER_GET_ANSWER,
-                                            session_init_can_be_enqueued=False,
-                                            custom_data=session_id)
 
 with Hermes(MQTT_ADDR) as h:
     h.subscribe_intent(INTENT_SHOW, show_procedure) \
