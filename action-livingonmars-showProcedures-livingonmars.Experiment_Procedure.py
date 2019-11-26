@@ -39,7 +39,7 @@ def randomize_procedure(hermes, intent_message):
     return hermes.publish_continue_session(intent_message.session_id, "randomize", [INTENT_CONFIRM])
 
 def cancel_procedure(hermes, intent_message):
-	print("The user is asking to cancel the request")
+    print("The user is asking to cancel the request")
     sentence = "You cancelled the request"
     r = requests.post(GUI_ADDR + "/cancel", json = {'cancel': 'true'})
     return hermes.publish_end_session(intent_message.session_id, sentence)
