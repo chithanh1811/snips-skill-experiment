@@ -15,8 +15,11 @@ INTENT_CONFIRM = "livingonmars:confirmProcedure"
 INTENT_CHOOSE = "livingonmars:chooseProcedure"
 INTENT_RANDOM = "livingonmars:randomizeProcedure"
 INTENT_SHOW = "livingonmars:showProcedures"
-    
-procedures = requests.get("http://localhost:8000/procedures").json()
+
+DB_ADDR = "http://localhost:8000"
+GUI_ADDR = "http://localhost:4000"
+
+procedures = requests.get(DB_ADDR + "/procedures").json()
 
 def show_procedure(hermes, intent_message):
     print("The user is asking to show the experiment list")
@@ -27,6 +30,8 @@ def show_procedure(hermes, intent_message):
         order_number += 1
         sentence += str(order_number) + ". " + procedure["title"] + ". "
 
+    r = requests.post(GUI_ADDR + "/show", json = procedures)
+
     return hermes.publish_continue_session(intent_message.session_id, "Which experiment do you want to start?", [INTENT_CANCEL, INTENT_CHOOSE])
 
 def randomize_procedure(hermes, intent_message):
@@ -35,6 +40,7 @@ def randomize_procedure(hermes, intent_message):
 
 def cancel_procedure(hermes, intent_message):
     sentence = "You cancelled the request"
+    r = requests.post(GUI_ADDR + "/cancel", json = {'cancel': 'true'})
     return hermes.publish_end_session(intent_message.session_id, sentence)
 
 def choose_procedure(hermes, intent_message):
@@ -42,18 +48,24 @@ def choose_procedure(hermes, intent_message):
     raw_choice = intent_message.slots.procedure.first().value
     if raw_choice == "one":
         choice = 1
+        r = requests.post(GUI_ADDR + "/select", json = {'id': '1'})
     elif raw_choice == "two":
         choice = 2
+        r = requests.post(GUI_ADDR + "/select", json = {'id': '2'})
     elif raw_choice == "three":
         choice = 3
+        r = requests.post(GUI_ADDR + "/select", json = {'id': '3'})
     elif raw_choice == "four":
         choice = 4
+        r = requests.post(GUI_ADDR + "/select", json = {'id': '4'})
     elif raw_choice == "five":
         choice = 5
+        r = requests.post(GUI_ADDR + "/select", json = {'id': '5'})
     elif raw_choice == "six":
         choice = 6
+        r = requests.post(GUI_ADDR + "/select", json = {'id': '6'})
     else:
-        choice = raw_choice
+    	return hermes.publish_continue_session(intent_message.session_id, "Please select a number!", [INTENT_CHOOSE])
 
     sentence = "You chose " + str(choice) + ". " + str(procedures[choice-1]["title"]) + ". Is that correct?"
     return hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_CONFIRM, INTENT_CANCEL])
@@ -63,9 +75,11 @@ def confirm_procedure(hermes, intent_message):
     raw_choice = intent_message.slots.confirmation.first().value
     if raw_choice == "yes":
         sentence = "Experiment started"
+        r = requests.post(GUI_ADDR + "/confirm", json = {'confirm': 'true'})
         return hermes.publish_end_session(intent_message.session_id, sentence)
     else:
         sentence = "Which experiment do you want to start?"
+        r = requests.post(GUI_ADDR + "/show", json = procedures)
         return hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_CHOOSE, INTENT_RANDOM, INTENT_CANCEL])
 
 with Hermes(MQTT_ADDR) as h:
