@@ -32,7 +32,7 @@ def show_procedure(hermes, intent_message):
 
     r = requests.post(GUI_ADDR + "/show", json = procedures)
 
-    return hermes.publish_continue_session(intent_message.session_id, "Which experiment do you want to start?", [INTENT_CANCEL, INTENT_CHOOSE])
+    return hermes.publish_continue_session(intent_message.session_id, "Which experiment do you want to start", [INTENT_CANCEL, INTENT_CHOOSE])
 
 def randomize_procedure(hermes, intent_message):
     print("The user is asking to start a random experiment")
@@ -40,9 +40,8 @@ def randomize_procedure(hermes, intent_message):
 
 def cancel_procedure(hermes, intent_message):
     print("The user is asking to cancel the request")
-    sentence = "You cancelled the request"
     r = requests.post(GUI_ADDR + "/cancel", json = {'cancel': 'true'})
-    return hermes.publish_end_session(intent_message.session_id, sentence)
+    return hermes.publish_end_session(intent_message.session_id, "You cancelled the request")
 
 def choose_procedure(hermes, intent_message):
     print("The user is choosing an experiment")
