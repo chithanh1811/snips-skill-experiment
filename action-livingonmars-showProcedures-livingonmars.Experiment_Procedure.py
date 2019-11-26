@@ -17,7 +17,7 @@ INTENT_RANDOM = "livingonmars:randomizeProcedure"
 INTENT_SHOW = "livingonmars:showProcedures"
 
 DB_ADDR = "http://localhost:8000"
-GUI_ADDR = "http://localhost:4000"
+GUI_ADDR = "http://localhost:4040"
 
 procedures = requests.get(DB_ADDR + "/procedures").json()
 
