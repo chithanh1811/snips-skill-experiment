@@ -16,8 +16,7 @@ INTENT_CHOOSE = "livingonmars:chooseProcedure"
 INTENT_RANDOM = "livingonmars:randomizeProcedure"
 INTENT_SHOW = "livingonmars:showProcedures"
     
-with open('sample-response.json') as database_response:
-    procedures = json.load(database_response)
+procedures = requests.get("http://localhost:8000/procedures").json()
 
 def show_procedure(hermes, intent_message):
     print("The user is asking to show the experiment list")
@@ -28,7 +27,7 @@ def show_procedure(hermes, intent_message):
         order_number += 1
         sentence += str(order_number) + ". " + procedure["title"] + ". "
 
-    return hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_CANCEL, INTENT_CHOOSE])
+    return hermes.publish_continue_session(intent_message.session_id, "Which experiment do you want to start?", [INTENT_CANCEL, INTENT_CHOOSE])
 
 def randomize_procedure(hermes, intent_message):
     print("The user is asking to start a random experiment")
