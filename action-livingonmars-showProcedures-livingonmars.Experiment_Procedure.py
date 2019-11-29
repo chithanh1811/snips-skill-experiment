@@ -20,7 +20,7 @@ DB_ADDR = "http://localhost:8000"
 GUI_ADDR = "http://localhost:4040"
 
 def show_procedure(hermes, intent_message):
-	procedures = requests.get(DB_ADDR + "/procedures").json()
+    procedures = requests.get(DB_ADDR + "/procedures").json()
     print("The user is asking to show the experiment list")
 
     order_number = 0
@@ -43,7 +43,7 @@ def cancel_procedure(hermes, intent_message):
     return hermes.publish_end_session(intent_message.session_id, "You cancelled the request")
 
 def choose_procedure(hermes, intent_message):
-	procedures = requests.get(DB_ADDR + "/procedures").json()
+    procedures = requests.get(DB_ADDR + "/procedures").json()
     print("The user is choosing an experiment")
     raw_choice = intent_message.slots.procedure.first().value
     if raw_choice == "one":
@@ -65,7 +65,7 @@ def choose_procedure(hermes, intent_message):
         choice = 6
         r = requests.post(GUI_ADDR + "/select", json = {'id': '6'})
     else:
-    	return hermes.publish_continue_session(intent_message.session_id, "Please select a number!", [INTENT_CHOOSE])
+        return hermes.publish_continue_session(intent_message.session_id, "Please select a number!", [INTENT_CHOOSE])
 
     sentence = "You selected " + str(choice) + ". " + str(procedures[choice-1]["title"]) + ". Is that correct?"
     return hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_CONFIRM, INTENT_CANCEL])
