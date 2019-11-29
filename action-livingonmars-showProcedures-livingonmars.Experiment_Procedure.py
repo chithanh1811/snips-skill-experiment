@@ -19,9 +19,8 @@ INTENT_SHOW = "livingonmars:showProcedures"
 DB_ADDR = "http://localhost:8000"
 GUI_ADDR = "http://localhost:4000"
 
-procedures = requests.get(DB_ADDR + "/procedures").json()
-
 def show_procedure(hermes, intent_message):
+	procedures = requests.get(DB_ADDR + "/procedures").json()
     print("The user is asking to show the experiment list")
 
     order_number = 0
@@ -44,6 +43,7 @@ def cancel_procedure(hermes, intent_message):
     return hermes.publish_end_session(intent_message.session_id, "You cancelled the request")
 
 def choose_procedure(hermes, intent_message):
+	procedures = requests.get(DB_ADDR + "/procedures").json()
     print("The user is choosing an experiment")
     raw_choice = intent_message.slots.procedure.first().value
     if raw_choice == "one":
@@ -79,6 +79,7 @@ def confirm_procedure(hermes, intent_message):
         return hermes.publish_end_session(intent_message.session_id, sentence)
     else:
         sentence = "Which experiment do you want to start?"
+        procedures = requests.get(DB_ADDR + "/procedures").json()
         r = requests.post(GUI_ADDR + "/show", json = procedures)
         return hermes.publish_continue_session(intent_message.session_id, sentence, [INTENT_CHOOSE, INTENT_RANDOM, INTENT_CANCEL])
 
