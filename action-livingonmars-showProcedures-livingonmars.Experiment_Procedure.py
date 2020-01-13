@@ -27,7 +27,7 @@ cmd = ['tvservice', '-s']
 proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 o, e = proc.communicate()
 isConnected = re.search("^state 0x.*a$", o.decode('ascii'))
-print(isConnected)
+print(o.decode('ascii'))
 
 # save the selected procedure
 selectedProcedure = -1
