@@ -102,10 +102,10 @@ def confirm_procedure(hermes, intent_message):
         # decide the output according to the version (VUI or VUI+GUI)
         # create dialogue output for VUI+GUI
         procedure_title = ""
-        print("procedure: "+ procedure["procedure"])
+        # print("procedure: "+ procedure["procedure"])
         print("procedure title: "+ procedure["procedure"]["title"])
-        print("resources: "+ procedure["resources"])
-        print("resource 1: "+ procedure["resources"][0])
+        # print("resources: "+ procedure["resources"])
+        # print("resource 1: "+ procedure["resources"][0])
         print("resource 1: "+ procedure["resources"][0]["title"])
         resources_list = ""
         # for resource in procedure["resources"]:
