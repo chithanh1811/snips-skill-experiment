@@ -97,7 +97,7 @@ def confirm_procedure(hermes, intent_message):
     if raw_choice == "yes" and selectedProcedure != -1:
         print("The user said yes and there is a selected procedure: " + str(selectedProcedure))
         # request to the DB API to get the procedure detail
-        procedure = requests.get(DB_ADDR + "/procedures/" + selectedProcedure).json()
+        procedure = requests.get(DB_ADDR + "/procedures/" + str(selectedProcedure)).json()
 
         # decide the output according to the version (VUI or VUI+GUI)
         # create dialogue output for VUI+GUI
