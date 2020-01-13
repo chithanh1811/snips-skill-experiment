@@ -23,11 +23,7 @@ DB_ADDR = "http://localhost:8000"
 GUI_ADDR = "http://localhost:4040"
 
 # check if HDMI is connected and set the global variable
-cmd = ['tvservice', '-M']
-proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-o, e = proc.communicate()
-isConnected = re.search("^state 0x.*a$", o.decode('ascii'))
-print(o, e)
+isConnected = True
 
 # save the selected procedure
 selectedProcedure = -1
