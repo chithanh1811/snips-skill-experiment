@@ -110,6 +110,7 @@ def confirm_procedure(hermes, intent_message):
         global isConnected
         if isConnected:
             # request to GUI API to show the procedure detail
+            output_message = ""
     
         return hermes.publish_end_session(intent_message.session_id, output_message)
     else:
