@@ -35,7 +35,7 @@ selectedProcedure = -1
 def show_procedures(hermes, intent_message):
     print("The user is asking to show the experiment list")
     outputMessage = proceduresListOutput()
-    return hermes.publish_continue_session(intent_message.session_id, outputMessage, [INTENT_CANCEL, INTENT_CHOOSE])
+    return hermes.publish_end_session(intent_message.session_id, outputMessage)
 
 # TODO: open session here
 # action fuction for the CHOOSE PROCEDURE intent
@@ -62,7 +62,7 @@ def choose_procedure(hermes, intent_message):
     elif raw_choice == "six":
         choice = 6
     else:
-        return hermes.publish_continue_session(intent_message.session_id, "Please select a number!", [INTENT_CHOOSE])
+        return hermes.publish_end_session(intent_message.session_id, "Please select a number!")
     
     # set the selected procedure
     global selectedProcedure
@@ -109,7 +109,7 @@ def confirm_procedure(hermes, intent_message):
     else:
         # user didn't confirm so the system resets
         outputMessage = proceduresListOutput()
-        return hermes.publish_continue_session(intent_message.session_id, outputMessage, [INTENT_CHOOSE, INTENT_CANCEL])
+        return hermes.publish_end_session(intent_message.session_id, outputMessage)
 
 def cancel_procedure(hermes, intent_message):
     print("The user is asking to cancel the request")
