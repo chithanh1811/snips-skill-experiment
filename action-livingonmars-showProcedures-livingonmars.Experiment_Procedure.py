@@ -87,7 +87,7 @@ def choose_procedure(hermes, intent_message):
 # action function that handles the response of the session of the CHOOSE PROCEDURE intent
 def confirm_procedure(hermes, intent_message):
     global selectedProcedure
-    print("The user is confirming the chosen procedure number: " + selectedProcedure)
+    print("The user is confirming the chosen procedure number.")
 
     # get what the user said
     raw_choice = intent_message.slots.confirmation.first().value
@@ -95,7 +95,7 @@ def confirm_procedure(hermes, intent_message):
     # check if it's yes and we know the number of the selected procedure
 
     if raw_choice == "yes" and selectedProcedure != -1:
-
+        print("The user said yes and there is a selected procedure: " + str(selectedProcedure))
         # request to the DB API to get the procedure detail
         procedure = requests.get(DB_ADDR + "/procedures/" + selectedProcedure).json()
 
