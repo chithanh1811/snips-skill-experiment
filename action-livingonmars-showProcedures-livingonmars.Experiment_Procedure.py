@@ -134,7 +134,7 @@ def finish_procedure(hermes, intent_message):
     global isConnected
     if isConnected:
         # send request to GUI API to show the finish screen
-        r = requests.post(GUI_ADDR + "/finish")
+        r = requests.get(GUI_ADDR + "/finish")
         
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
