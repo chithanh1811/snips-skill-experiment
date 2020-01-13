@@ -101,24 +101,17 @@ def confirm_procedure(hermes, intent_message):
 
         # decide the output according to the version (VUI or VUI+GUI)
         # create dialogue output for VUI+GUI
-        procedure_title = ""
-        # print("procedure: "+ procedure["procedure"])
-        print("procedure title: "+ procedure["procedure"]["title"])
-        # print("resources: "+ procedure["resources"])
-        # print("resource 1: "+ procedure["resources"][0])
-        print("resource 1: "+ procedure["resources"][0]["title"])
-        resources_list = ""
-        # for resource in procedure["resources"]:
-        #     resources_list += resource["title"] + ", "
+        procedure_title = procedure["procedure"]["title"]
+        for resource in procedure["resources"]:
+            resources_list += resource["title"] + ", "
 
-        output_message = "Got it!"
-        #"Got it! Here is procedure {}. Let me know when you're ready to start the procedure. For this procedure you will need: {}".format(procedure_title, resources_list)
+        output_message = "Got it! Here is procedure {}. Let me know when you're ready to start the procedure. For this procedure you will need: {}".format(procedure_title, resources_list)
             
         global isConnected
         if isConnected:
             # request to GUI API to show the procedure detail
-            output_message = ""
-    
+            output_message = "Got it! Here is procedure {}. Let me know when you're ready to start the procedure. For this procedure you will need: {}".format(procedure_title, resources_list)
+            
         return hermes.publish_end_session(intent_message.session_id, output_message)
     else:
         # user didn't confirm so the system resets
