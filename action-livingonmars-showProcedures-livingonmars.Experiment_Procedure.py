@@ -30,19 +30,14 @@ o, e = proc.communicate()
 # save the selected procedure
 selectedProcedure = -1
 
-
 ########### STAGE ONE - LIST & SELECT PROCEDURES ###########
-
-
 # TODO: Remove session. I renamed - hope it doesn't break anything
 # action fuction for the START EXPERIMENT intent
+
 def show_procedures(hermes, intent_message):
     print("The user is asking to show the experiment list")
-
     outputMessage = proceduresListOutput()
-  
     return hermes.publish_continue_session(intent_message.session_id, outputMessage, [INTENT_CANCEL, INTENT_CHOOSE])
-
 
 # TODO: open session here
 # action fuction for the CHOOSE PROCEDURE intent
@@ -76,7 +71,6 @@ def choose_procedure(hermes, intent_message):
     selectedProcedure = choice
 
     # decide the output according to the version (VUI or VUI+GUI)
-    global ​isConnected
     outputMessage = "You selected {}, {}. Is that correct?".format(str(choice), str(procedures[choice-1]["title"])) 
     if ​isConnected:
         # request to GUI API to highlight the selected procedure
@@ -105,7 +99,6 @@ def confirm_procedure(hermes, intent_message):
 
         # decide the output according to the version (VUI or VUI+GUI)
         outputMessage = ""
-        global ​isConnected
         if ​isConnected:
             # create dialogue output for VUI+GUI
             outputMessage = ""
@@ -120,26 +113,15 @@ def confirm_procedure(hermes, intent_message):
         outputMessage = proceduresListOutput()
         return hermes.publish_continue_session(intent_message.session_id, outputMessage, [INTENT_CHOOSE, INTENT_CANCEL])
 
-
-
-
-
-
 def cancel_procedure(hermes, intent_message):
     print("The user is asking to cancel the request")
     r = requests.post(GUI_ADDR + "/cancel", json = {'cancel': 'true'})
     return hermes.publish_end_session(intent_message.session_id, "You cancelled the request")
 
-
-
-
-
-
 ########### "PRIVATE" METHODS ###########
-
-
 # auxiliary function to execute all the necessary steps to list procedures
 # returns the STRING outputMessage
+
 def proceduresListOutput():
     # get procedures data from the DB API
     procedures = requests.get(DB_ADDR + "/procedures").json()
@@ -155,7 +137,6 @@ def proceduresListOutput():
 
     # decide the output according to the version (VUI or VUI+GUI)
     outputMessage = ""
-    global ​isConnected
     if ​isConnected:
         # create dialogue output for VUI+GUI
         outputMessage = "I have found {} Procedures. Here are the procedures.".format(totalProcedures)
@@ -168,8 +149,6 @@ def proceduresListOutput():
     return outputMessage
 
 ###########
-
-
 
 ########### not necessary atm
 
