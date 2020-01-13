@@ -72,7 +72,7 @@ def choose_procedure(hermes, intent_message):
 
     # decide the output according to the version (VUI or VUI+GUI)
     outputMessage = "You selected {}, {}. Is that correct?".format(str(choice), str(procedures[choice-1]["title"])) 
-    if ​isConnected:
+    if isConnected:
         # request to GUI API to highlight the selected procedure
         r = requests.post(GUI_ADDR + "/select", json = {'id': choice})
   
@@ -99,7 +99,7 @@ def confirm_procedure(hermes, intent_message):
 
         # decide the output according to the version (VUI or VUI+GUI)
         outputMessage = ""
-        if ​isConnected:
+        if isConnected:
             # create dialogue output for VUI+GUI
             outputMessage = ""
             # request to GUI API to show the procedure detail
@@ -137,7 +137,7 @@ def proceduresListOutput():
 
     # decide the output according to the version (VUI or VUI+GUI)
     outputMessage = ""
-    if ​isConnected:
+    if isConnected:
         # create dialogue output for VUI+GUI
         outputMessage = "I have found {} Procedures. Here are the procedures.".format(totalProcedures)
         # request to GUI API to show the list on the screen
