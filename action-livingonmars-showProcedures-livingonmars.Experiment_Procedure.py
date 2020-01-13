@@ -6,6 +6,7 @@ import requests
 import json
 import random
 import subprocess
+import re
 
 MQTT_IP_ADDR = "localhost"
 MQTT_PORT = 1883
@@ -25,7 +26,7 @@ GUI_ADDR = "http://localhost:4040"
 cmd = ['tvservice', '-s']
 proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 o, e = proc.communicate()
-isConnected = "a" in o.decode('ascii')
+isConnected = re.search("0x.*a", o.decode('ascii'))
 
 # save the selected procedure
 selectedProcedure = -1
