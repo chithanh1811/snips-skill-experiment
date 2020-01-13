@@ -25,7 +25,7 @@ GUI_ADDR = "http://localhost:4040"
 cmd = ['tvservice', '-s']
 proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 o, e = proc.communicate()
-isConnected = "0xa" in o.decode('ascii')
+isConnected = "a" in o.decode('ascii')
 
 # save the selected procedure
 selectedProcedure = -1
