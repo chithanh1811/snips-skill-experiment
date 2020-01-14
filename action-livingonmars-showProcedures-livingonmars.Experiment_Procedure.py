@@ -236,6 +236,7 @@ def cancel_procedure(hermes, intent_message):
     global STAGE, STATE
     print("STATE 0.0: Initial")
     STATE = 0
+    STAGE = 0
     selected_procedure = 0
     current_step = 0
     r = requests.post(GUI_ADDR + "/cancel", json={'cancel': 'true'})
