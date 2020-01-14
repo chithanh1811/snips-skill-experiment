@@ -178,11 +178,11 @@ def start_procedure(hermes, intent_message):
         output_message = proceduresListOutput()
         return hermes.publish_end_session(intent_message.session_id, output_message)
 
-    if STAGE == 1 and STATE == 3:
-        # Go to STATE 2.1: Showing Procedure Overview
-        STAGE = 2
+    if STAGE == 2 and STATE == 1:
+        # Go to STATE 3.1: Showing Procedure Overview
+        STAGE = 3
         STATE = 1
-        print("STATE 2.1: Showing Procedure Overview")
+        print("STATE 3.1: Following the Steps")
 
         # The index for the current step. We are always starting with the first step (0 in an array)
         current_step = 1
