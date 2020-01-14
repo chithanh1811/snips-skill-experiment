@@ -195,7 +195,7 @@ def proceduresListOutput():
 
 # returns True if HDMI is connected
 def isConnected():
-    cmd = ['tvservice', '-s']
+    cmd = ['sudo', 'tvservice', '-s']
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     o, e = proc.communicate()
     return re.search("^state 0x.*a$", o.decode('ascii'))
