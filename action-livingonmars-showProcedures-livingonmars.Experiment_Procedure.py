@@ -135,8 +135,7 @@ def confirm_procedure(hermes, intent_message):
                 # TODO request to GUI API to show the procedure detail
                 # CHANGE THIS
                 r = requests.post(GUI_ADDR + "/select", json={'id': selectedProcedure})
-
-            # return hermes.publish_end_session(intent_message.session_id, output_message)
+            return hermes.publish_end_session(intent_message.session_id, output_message)
         else:
             # user didn't confirm so the system resets
             # Go to STATE 1.1: Listing Available Procedure
