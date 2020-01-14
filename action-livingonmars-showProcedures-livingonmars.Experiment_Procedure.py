@@ -129,10 +129,10 @@ def choose_procedure(hermes, intent_message):
 def confirm_procedure(hermes, intent_message):
     global STAGE, STATE, selected_procedure, total_steps
     if STAGE == 1 and STATE == 2:
-        # Go to STATE 1.3: Confirming the Selection
-        STAGE = 1
-        STATE = 3
-        print("STATE 1.3: Confirming the Selection")
+        # Go to STATE 2.1: Confirming the Selection & Listing the Ingredients
+        STAGE = 2
+        STATE = 1
+        print("STATE 2.1: Confirming the Selection & Listing the Ingredients")
 
         # get what the user said
         raw_choice = intent_message.slots.confirmation.first().value
@@ -179,7 +179,7 @@ def start_procedure(hermes, intent_message):
         return hermes.publish_end_session(intent_message.session_id, output_message)
 
     if STAGE == 2 and STATE == 1:
-        # Go to STATE 3.1: Showing Procedure Overview
+        # Go to STATE 3.1: Following the Steps
         STAGE = 3
         STATE = 1
         print("STATE 3.1: Following the Steps")
@@ -218,8 +218,8 @@ def next_step(hermes, intent_message):
             print("STATE 3.2: Last Step")
             output_message = "You are almost done! This is the last step. Please tell me when you are done. The last step is {}".format(next_step_description)
         else:
-            # Stay in STATE 3.1: A Normal Step
-            print("STATE 3.1: Normal Step")    
+            # Stay in STATE 3.1: Following the Steps
+            print("STATE 3.1: Following the Steps")    
             print("STEP {}".format(current_step))
             output_message = "This is step {} out of {}. {}".format(current_step, total_steps, next_step_description)
 
