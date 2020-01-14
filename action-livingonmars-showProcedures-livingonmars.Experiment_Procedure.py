@@ -54,7 +54,19 @@ def show_procedures(hermes, intent_message):
 
 # triggered when "livingonmars:chooseProcedure" is detected
 def choose_procedure(hermes, intent_message):
-    global STAGE, STATE, selectedProcedure
+	global STAGE, STATE, selectedProcedure
+	if STAGE == 0 and STATE == 0:
+        # Go to STATE 1.1: Listing Available Procedure
+        STAGE = 1
+        STATE = 1
+        print("STATE 1.1: Listing Available Procedure")
+        output_message = proceduresListOutput()
+        return hermes.publish_end_session(intent_message.session_id, output_message)
+    if STAGE == 1 and STATE == 3:
+        # Go to STATE 2.1: Starting the Selected Experiment - Listing Ingredients
+        STAGE = 2
+        STATE = 1
+        print("STATE 2.1: Starting the Selected Experiment - Listing Ingredients")
     if STAGE == 1 and STATE == 1:
         # Go to STATE 1.2: Selecting a Procedure
         STAGE = 1
@@ -195,10 +207,11 @@ def proceduresListOutput():
 
 # returns True if HDMI is connected
 def isConnected():
-    cmd = ['sudo', 'tvservice', '-s']
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    o, e = proc.communicate()
-    return re.search("^state 0x.*a$", o.decode('ascii'))
+    #cmd = ['sudo', 'tvservice', '-s']
+    #proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #o, e = proc.communicate()
+    #return re.search("^state 0x.*a$", o.decode('ascii'))
+    return True
 
 with Hermes(MQTT_ADDR) as h:
     h.subscribe_intent(INTENT_SHOW, show_procedures) \
