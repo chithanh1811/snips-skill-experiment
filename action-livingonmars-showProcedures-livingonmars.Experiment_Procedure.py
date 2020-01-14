@@ -111,7 +111,7 @@ def choose_procedure(hermes, intent_message):
         elif raw_choice == "six":
             selected_procedure = 6
         else:
-            return hermes.publish_end_session(intent_message.session_id, "Please select a number from one to six!", [INTENT_CHOOSE, INTENT_CANCEL])
+            return hermes.publish_end_session(intent_message.session_id, "Please select a number from one to six!")
             # TODO Test this. Changed from end_session to continue_session, so that the user can reselect once the wrong input is detected.
         
         output_message = "You selected {}, {}. Is that correct?".format(str(selected_procedure), str(procedures[selected_procedure - 1]["title"]))
