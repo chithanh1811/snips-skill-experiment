@@ -54,8 +54,8 @@ def show_procedures(hermes, intent_message):
 
 # triggered when "livingonmars:chooseProcedure" is detected
 def choose_procedure(hermes, intent_message):
-	global STAGE, STATE, selectedProcedure
-	if STAGE == 0 and STATE == 0:
+    global STAGE, STATE, selectedProcedure
+    if STAGE == 0 and STATE == 0:
         # Go to STATE 1.1: Listing Available Procedure
         STAGE = 1
         STATE = 1
