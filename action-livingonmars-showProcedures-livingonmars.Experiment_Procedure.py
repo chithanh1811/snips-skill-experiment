@@ -35,6 +35,7 @@ STAGE = 0
 
 # triggered when "livingonmars:showProcedures" is detected
 def show_procedures(hermes, intent_message):
+    global STAGE, STATE
     if STAGE == 0 and STATE == 0:
         # Go to STATE 1.1: Listing Available Procedure
         STAGE = 1
@@ -53,6 +54,7 @@ def show_procedures(hermes, intent_message):
 
 # triggered when "livingonmars:chooseProcedure" is detected
 def choose_procedure(hermes, intent_message):
+	global STAGE, STATE, selectedProcedure
     if STAGE == 1 and STATE == 1:
         # Go to STATE 1.2: Selecting a Procedure
         STAGE = 1
@@ -93,6 +95,7 @@ def choose_procedure(hermes, intent_message):
 
 # triggered when "livingonmars:confirmProcedure" is detected
 def confirm_procedure(hermes, intent_message):
+	global STAGE, STATE
     if STAGE == 1 and STATE == 2:
         # Go to STATE 1.3: Confirming the Selection
         STAGE = 1
@@ -135,6 +138,7 @@ def confirm_procedure(hermes, intent_message):
 def cancel_procedure(hermes, intent_message):
     # TODO Disable the default Cancel command, so that we can apply our custom actions (reset our parameters)
     # https://docs.snips.ai/articles/platform/dialog/multi-turn-dialog/disable-safe-word 
+    global STAGE, STATE
     print("The user is asking to cancel the request")
     STAGE = 0
     STATE = 0
@@ -145,6 +149,7 @@ def cancel_procedure(hermes, intent_message):
 
 # triggered when "livingonmars:chooseProcedure" is detected
 def finish_procedure(hermes, intent_message):
+    global STAGE, STATE
     if STAGE == 3 and STATE == 2:
         # Go to STATE 3.3: Finishing the Procedure
         STAGE = 1
@@ -176,8 +181,7 @@ def proceduresListOutput():
 
     # decide the output according to the version (VUI or VUI+GUI)
     output_message = ""
-    global isConnected
-    if isConnected:
+    if isConnected():
         # create dialogue output for VUI+GUI
         output_message = "I have found {} Procedures. Here are the procedures.".format(total_procedures)
         # request to GUI API to show the list on the screen
