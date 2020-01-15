@@ -369,7 +369,7 @@ def manualMessageOutput():
     # get the message for the stage and state
     if STAGE == 0 and STATE == 0:
         print("Getting the manual for: STATE 0.0")
-        output_message = "I am here to help you with lab tasks.. At anytime, you can call me by my name, and ask for help like you did now. Other things I can always do is to, repeat everything I say if you want to hear it again.. Right now, you can call me and say that you want to start an experiment!"
+        output_message = "I am here to help you with lab tasks. At anytime, you can call me by my name, and ask for help, like you did now. Other things I can always do is to, repeat everything I say, if you want to hear it again. Right now, you can call me and say that you want to start an experiment!"
         
     if STAGE == 1 and STATE == 1:
         print("Getting the manual for: STATE 1.1")
