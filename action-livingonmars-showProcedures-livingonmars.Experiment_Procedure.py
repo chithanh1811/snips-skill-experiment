@@ -20,6 +20,7 @@ INTENT_START = "livingonmars:startProcedure"
 INTENT_NEXT = "livingonmars:nextStep"
 INTENT_FINISH = "livingonmars:finishProcedure"
 INTENT_REPEAT = "livingonmars:repeat"
+INTENT_HELP = "livingonmars:help"
 
 
 # addresses for connections to the DB and GUI API servers 
@@ -261,6 +262,14 @@ def repeat(hermes, intent_message):
 
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
+# triggered when "livingonmars:help" is detected
+def help_intent(hermes, intent_message):
+    print("Help intent triggered!")
+    
+    output_message = manualMessageOutput()
+    
+    return hermes.publish_end_session(intent_message.session_id, output_message)
+
 # triggered when "livingonmars:cancelProcedure" is detected
 def cancel_procedure(hermes, intent_message):
     # TODO Disable the default Cancel command, so that we can apply our custom actions (reset our parameters)
@@ -312,10 +321,12 @@ def proceduresListOutput():
 
     return output_message
 
+# auxiliary function to get the output messages for each STAGE and STATE
 def repeatMessageOutput():
     global STAGE, STATE, procedures_list, selected_procedure_title, total_steps, resources_list, current_step, procedure_steps
     
-    output_message = "I am lost and I don't what the hell we are doing either..."
+    output_message = "I don't remember what I just said either... Sorry..."
+    next_step_description = procedure_steps["steps"][current_step-1]["description"]
 
     # get the message for the stage and state
     if STAGE == 1 and STATE == 1:
@@ -327,7 +338,6 @@ def repeatMessageOutput():
         output_message = "Let me know when you're ready to start the procedure {}. It has {} steps. You will need: {}".format(selected_procedure_title, total_steps, resources_list)
     
     if STAGE == 3 and STATE == 1:
-        next_step_description = procedure_steps["steps"][current_step-1]["description"]
         
         if current_step == 1:
             print("Repeating message for: STATE 3.1 and it's the first step")
@@ -343,7 +353,30 @@ def repeatMessageOutput():
 
     return output_message
 
+# auxiliary function to get the manual messages for each STAGE and STATE
+def manualMessageOutput():
+    global STAGE, STATE, total_steps, current_step
+    
+    output_message = "I am lost and I don't what the hell we are doing either..."
 
+    # get the message for the stage and state
+    if STAGE == 1 and STATE == 1:
+        print("Getting the manual for: STATE 1.1")
+        output_message = "You can wake me up and tell me the number to choose a procedure."
+    
+    if STAGE == 2 and STATE == 1:
+        print("Getting the manual for: STATE 2.1")
+        output_message = "Let me know when you're ready to start the procedure"
+    
+    if STAGE == 3 and STATE == 1:
+        print("Getting the manual for: STATE 3.1")
+        output_message = "When you are ready for the next step, please say next step!"
+        
+    if STAGE == 3 and STATE == 2:
+        print("Getting the manual for: STATE 3.2")
+        output_message = "You are almost done! This is the last step. Please tell me when you are done."
+
+    return output_message
 
 # returns True if HDMI is connected
 def isConnected():
@@ -362,6 +395,7 @@ with Hermes(MQTT_ADDR) as h:
         .subscribe_intent(INTENT_NEXT, next_step) \
         .subscribe_intent(INTENT_FINISH, finish_procedure) \
         .subscribe_intent(INTENT_REPEAT, repeat) \
+        .subscribe_intent(INTENT_HELP, help_intent) \
         .start()
 
 # TODO Manual
