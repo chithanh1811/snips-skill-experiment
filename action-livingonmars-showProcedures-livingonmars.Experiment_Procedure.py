@@ -338,7 +338,7 @@ def repeatMessageOutput():
             output_message = "This is step {} out of {}. {}".format(current_step, total_steps, next_step_description)
         
     if STAGE == 3 and STATE == 2:
-            print("Repeating message for: STATE 3.2")
+        print("Repeating message for: STATE 3.2")
         output_message = "You are almost done! This is the last step. Please tell me when you are done. The last step is {}".format(next_step_description)
 
     return output_message
