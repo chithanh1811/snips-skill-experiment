@@ -257,7 +257,7 @@ def finish_procedure(hermes, intent_message):
 def repeat(hermes, intent_message):
     print("Repeat intent triggered!")
     
-    message_output = repeatMessageOutput()
+    output_message = repeatMessageOutput()
 
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
