@@ -134,7 +134,7 @@ def choose_procedure(hermes, intent_message):
 
 # triggered when "livingonmars:confirmProcedure" is detected
 def confirm_procedure(hermes, intent_message):
-    global STAGE, STATE, selected_procedure, total_steps, selected_procedure_title, resources_list
+    global STAGE, STATE, selected_procedure, total_steps
     if STAGE == 1 and STATE == 2:
         # Go to STATE 2.1: Confirming the Selection & Listing the Ingredients
         STAGE = 2
@@ -147,22 +147,23 @@ def confirm_procedure(hermes, intent_message):
         # check if it's yes and we know the number of the selected procedure
         if raw_choice == "yes" and selected_procedure != -1:
             print("Procedure " + str(selected_procedure) + " confirmed")
-            
+
             # request to the DB API to get the procedure detail
             procedure = requests.get(DB_ADDR + "/procedures/" + str(selected_procedure)).json()
             resources_list = ""
-            selected_procedure_title = procedure["procedure"]["title"]
+            procedure_title = procedure["procedure"]["title"]
             total_steps = procedure["stepsCount"]
             for resource in procedure["resources"]:
                 resources_list += resource["title"] + ", "
 
-            output_message = "Got it! Here is procedure {}. It has {} steps. Let me know when you're ready to start. For this procedure you will need: {}".format(selected_procedure_title, total_steps, resources_list)
+            output_message = "Got it! Here is procedure {}. It has {} steps. Let me know when you're ready to start. For this procedure you will need: {}".format(
+                procedure_title, total_steps, resources_list)
             # decide the output according to the version (VUI or V+GUI)
-            # create dialogue output for V+GUI    
+            # create dialogue output for V+GUI
             if isConnected():
                 # TODO request to GUI API to show the procedure detail
                 # CHANGE THIS
-                r = requests.post(GUI_ADDR + "/select", json={'id': selected_procedure})
+                r = requests.post(GUI_ADDR + "/confirm", json=procedure)
 
             return hermes.publish_end_session(intent_message.session_id, output_message)
         else:
@@ -172,6 +173,8 @@ def confirm_procedure(hermes, intent_message):
             STATE = 1
             print("STATE 1.1: Listing Available Procedure")
             output_message = proceduresListOutput()
+            # go back to procedure list
+            r = requests.get(GUI_ADDR + "/cancel")
             return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # action function that handles the response of the session of the START PROCEDURE intent
@@ -198,24 +201,25 @@ def start_procedure(hermes, intent_message):
         procedure_steps = requests.get(DB_ADDR + "/proceduresteps/" + str(selected_procedure)).json()
 
         # Getting the instructions for the first step
-        first_step = procedure_steps["steps"][current_step-1]["description"]
-        output_message = "Alright! This is the first step. When you are ready for the next step, please say next step! Let's start! {} ".format(first_step)
+        first_step = procedure_steps["steps"][current_step - 1]["description"]
+        output_message = "Alright! This is the first step. When you are ready for the next step, please say next step! Let's start! {} ".format(
+            first_step)
 
         if isConnected():
             # Sending the instructions to the GUI
-            r = requests.post(GUI_ADDR + "/start")
+            r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
 
         return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # action function that handles the response of the session of the NEXT STEP intent
 def next_step(hermes, intent_message):
     global STAGE, STATE, total_steps, current_step, procedure_steps
-    
+
     # increase the current step to move to the next
     current_step += 1
 
     # get the description of the next step from the list
-    next_step_description = procedure_steps["steps"][current_step-1]["description"]
+    next_step_description = procedure_steps["steps"][current_step - 1]["description"]
 
     if STAGE == 3 and STATE == 1:
         # Check if the current step is the last step
@@ -223,16 +227,17 @@ def next_step(hermes, intent_message):
             # Go to STATE 3.2: The Last Step
             STATE = 2
             print("STATE 3.2: Last Step")
-            output_message = "You are almost done! This is the last step. Please tell me when you are done. The last step is {}".format(next_step_description)
+            output_message = "You are almost done! This is the last step. Please tell me when you are done. The last step is {}".format(
+                next_step_description)
         else:
             # Stay in STATE 3.1: Following the Steps
-            print("STATE 3.1: Following the Steps")    
+            print("STATE 3.1: Following the Steps")
             print("STEP {}".format(current_step))
             output_message = "This is step {} out of {}. {}".format(current_step, total_steps, next_step_description)
 
     if isConnected():
         # Sending the instructions to the GUI
-        r = requests.post(GUI_ADDR + "/next")
+        r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
 
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
@@ -364,8 +369,8 @@ def manualMessageOutput():
     # get the message for the stage and state
     if STAGE == 0 and STATE == 0:
         print("Getting the manual for: STATE 0.0")
-        output_message = "I am here to help you in the laboratory tasks. You can call again and say that you want to start an experiment."
-
+        output_message = "I am here to help you with lab tasks. At anytime you can call me by my name and ask for help like you did now. Other things I can always do is to repeat everything I say if you want to hear it again. Right now, you can call me and say that you want to start an experiment."
+        
     if STAGE == 1 and STATE == 1:
         print("Getting the manual for: STATE 1.1")
         output_message = "You can wake me up and tell me the number to choose a procedure."
