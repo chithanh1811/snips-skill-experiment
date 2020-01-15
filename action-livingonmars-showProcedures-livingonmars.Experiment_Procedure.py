@@ -19,14 +19,20 @@ INTENT_SHOW = "livingonmars:showProcedures"
 INTENT_START = "livingonmars:startProcedure"
 INTENT_NEXT = "livingonmars:nextStep"
 INTENT_FINISH = "livingonmars:finishProcedure"
+INTENT_REPEAT = "livingonmars:repeat"
 
 
 # addresses for connections to the DB and GUI API servers 
 DB_ADDR = "http://localhost:8000"
 GUI_ADDR = "http://localhost:4040"
 
+# save the procedures list
+procedures_list = ""
+
 # save the selected procedure, start at 1
 selected_procedure = 0
+selected_procedure_title = ""
+resources_list = ""
 
 # save the steps data
 current_step = -1
@@ -127,7 +133,7 @@ def choose_procedure(hermes, intent_message):
 
 # triggered when "livingonmars:confirmProcedure" is detected
 def confirm_procedure(hermes, intent_message):
-    global STAGE, STATE, selected_procedure, total_steps
+    global STAGE, STATE, selected_procedure, total_steps, selected_procedure_title, resources_list
     if STAGE == 1 and STATE == 2:
         # Go to STATE 2.1: Confirming the Selection & Listing the Ingredients
         STAGE = 2
@@ -144,12 +150,12 @@ def confirm_procedure(hermes, intent_message):
             # request to the DB API to get the procedure detail
             procedure = requests.get(DB_ADDR + "/procedures/" + str(selected_procedure)).json()
             resources_list = ""
-            procedure_title = procedure["procedure"]["title"]
+            selected_procedure_title = procedure["procedure"]["title"]
             total_steps = procedure["stepsCount"]
             for resource in procedure["resources"]:
                 resources_list += resource["title"] + ", "
 
-            output_message = "Got it! Here is procedure {}. It has {} steps. Let me know when you're ready to start. For this procedure you will need: {}".format(procedure_title, total_steps, resources_list)
+            output_message = "Got it! Here is procedure {}. It has {} steps. Let me know when you're ready to start. For this procedure you will need: {}".format(selected_procedure_title, total_steps, resources_list)
             # decide the output according to the version (VUI or V+GUI)
             # create dialogue output for V+GUI    
             if isConnected():
@@ -229,19 +235,6 @@ def next_step(hermes, intent_message):
 
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
-# triggered when "livingonmars:cancelProcedure" is detected
-def cancel_procedure(hermes, intent_message):
-    # TODO Disable the default Cancel command, so that we can apply our custom actions (reset our parameters)
-    # https://docs.snips.ai/articles/platform/dialog/multi-turn-dialog/disable-safe-word 
-    global STAGE, STATE
-    print("STATE 0.0: Initial")
-    STATE = 0
-    STAGE = 0
-    selected_procedure = 0
-    current_step = 0
-    r = requests.post(GUI_ADDR + "/cancel", json={'cancel': 'true'})
-    return hermes.publish_end_session(intent_message.session_id, "You cancelled the request")
-
 # triggered when "livingonmars:chooseProcedure" is detected
 def finish_procedure(hermes, intent_message):
     global STAGE, STATE
@@ -260,6 +253,36 @@ def finish_procedure(hermes, intent_message):
         return hermes.publish_end_session(intent_message.session_id, output_message)
     # TODO Manuals
 
+# triggered when "livingonmars:repeat" is detected
+def repeat(hermes, intent_message):
+    print("Repeat intent triggered!")
+    
+    message_output = repeatMessageOutput()
+
+    return hermes.publish_end_session(intent_message.session_id, output_message)
+
+# triggered when "livingonmars:cancelProcedure" is detected
+def cancel_procedure(hermes, intent_message):
+    # TODO Disable the default Cancel command, so that we can apply our custom actions (reset our parameters)
+    # https://docs.snips.ai/articles/platform/dialog/multi-turn-dialog/disable-safe-word 
+    
+    global STAGE, STATE, procedures_list, selected_procedure, selected_procedure_title, resources_list, current_step, procedure_steps, total_steps
+    print("STATE 0.0: Initial")
+    
+    # reset all global variables
+    STATE = 0
+    STAGE = 0
+    procedures_list = ""
+    selected_procedure = 0
+    selected_procedure_title = ""
+    resources_list = ""
+    current_step = -1
+    procedure_steps = []
+    total_steps = -1
+
+    r = requests.post(GUI_ADDR + "/cancel", json={'cancel': 'true'})
+    return hermes.publish_end_session(intent_message.session_id, "You cancelled the request")
+
 # auxiliary function to execute all the necessary steps to list procedures
 # returns the STRING outputMessage
 def proceduresListOutput():
@@ -269,11 +292,11 @@ def proceduresListOutput():
     # create the list of procedures with the order number from the JSON
     total_procedures = 0
     order_number = 0
-    procedure_list = ""
+    global procedures_list
     for procedure in procedures:
         order_number += 1
         total_procedures += 1
-        procedure_list += str(order_number) + ". " + procedure["title"] + ". "
+        procedures_list += str(order_number) + ". " + procedure["title"] + ". "
 
     # decide the output according to the version (VUI or VUI+GUI)
     output_message = ""
@@ -288,6 +311,39 @@ def proceduresListOutput():
             total_procedures, procedure_list)
 
     return output_message
+
+def repeatMessageOutput():
+    global STAGE, STATE, procedures_list, selected_procedure_title, total_steps, resources_list, current_step, procedure_steps
+    
+    output_message = "I am lost and I don't what the hell we are doing either..."
+
+    # get the message for the stage and state
+    if STAGE == 1 and STATE == 1:
+        print("Repeating message for: STATE 1.1")
+        output_message = "You can wake me up and tell me the number to choose a procedure. Here are the procedures: {}".format(procedures_list)
+    
+    if STAGE == 2 and STATE == 1:
+        print("Repeating message for: STATE 2.1")
+        output_message = "Let me know when you're ready to start the procedure {}. It has {} steps. You will need: {}".format(selected_procedure_title, total_steps, resources_list)
+    
+    if STAGE == 3 and STATE == 1:
+        next_step_description = procedure_steps["steps"][current_step-1]["description"]
+        
+        if current_step == 1:
+            print("Repeating message for: STATE 3.1 and it's the first step")
+            output_message = "When you are ready for the next step, please say next step! Let's start! {}".format(next_step_description)
+        
+        if current_step > 1 and current_step < total_steps:
+            print("Repeating message for: STATE 3.1 and it's not the first step nor the last")
+            output_message = "This is step {} out of {}. {}".format(current_step, total_steps, next_step_description)
+        
+    if STAGE == 3 and STATE == 2:
+            print("Repeating message for: STATE 3.2")
+        output_message = "You are almost done! This is the last step. Please tell me when you are done. The last step is {}".format(next_step_description)
+
+    return output_message
+
+
 
 # returns True if HDMI is connected
 def isConnected():
@@ -305,6 +361,7 @@ with Hermes(MQTT_ADDR) as h:
         .subscribe_intent(INTENT_START, start_procedure) \
         .subscribe_intent(INTENT_NEXT, next_step) \
         .subscribe_intent(INTENT_FINISH, finish_procedure) \
+        .subscribe_intent(INTENT_REPEAT, repeat) \
         .start()
 
-# TODO Manual, Repeat
+# TODO Manual
