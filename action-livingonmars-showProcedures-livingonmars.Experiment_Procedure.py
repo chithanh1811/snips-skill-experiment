@@ -37,7 +37,7 @@ resources_list = ""
 
 # save the steps data
 current_step = -1
-procedure_steps = []
+procedure_steps = None
 total_steps = -1
 
 # save the current state
@@ -286,7 +286,7 @@ def cancel_procedure(hermes, intent_message):
     selected_procedure_title = ""
     resources_list = ""
     current_step = -1
-    procedure_steps = []
+    procedure_steps = None
     total_steps = -1
 
     r = requests.post(GUI_ADDR + "/cancel", json={'cancel': 'true'})
@@ -326,7 +326,6 @@ def repeatMessageOutput():
     global STAGE, STATE, procedures_list, selected_procedure_title, total_steps, resources_list, current_step, procedure_steps
     
     output_message = "I don't remember what I just said either... Sorry..."
-    next_step_description = procedure_steps["steps"][current_step-1]["description"]
 
     # get the message for the stage and state
     if STAGE == 1 and STATE == 1:
@@ -338,6 +337,7 @@ def repeatMessageOutput():
         output_message = "Let me know when you're ready to start the procedure {}. It has {} steps. You will need: {}".format(selected_procedure_title, total_steps, resources_list)
     
     if STAGE == 3 and STATE == 1:
+        next_step_description = procedure_steps["steps"][current_step-1]["description"]
         
         if current_step == 1:
             print("Repeating message for: STATE 3.1 and it's the first step")
@@ -348,6 +348,8 @@ def repeatMessageOutput():
             output_message = "This is step {} out of {}. {}".format(current_step, total_steps, next_step_description)
         
     if STAGE == 3 and STATE == 2:
+        next_step_description = procedure_steps["steps"][current_step-1]["description"]
+
         print("Repeating message for: STATE 3.2")
         output_message = "You are almost done! This is the last step. Please tell me when you are done. The last step is {}".format(next_step_description)
 
@@ -357,9 +359,13 @@ def repeatMessageOutput():
 def manualMessageOutput():
     global STAGE, STATE, total_steps, current_step
     
-    output_message = "I am lost and I don't what the hell we are doing either..."
+    output_message = "I am lost and I do not know what the hell we are doing either..."
 
     # get the message for the stage and state
+    if STAGE == 0 and STATE == 0:
+        print("Getting the manual for: STATE 0.0")
+        output_message = "I am here to help you in the laboratory tasks. You can call again and say that you want to start an experiment."
+
     if STAGE == 1 and STATE == 1:
         print("Getting the manual for: STATE 1.1")
         output_message = "You can wake me up and tell me the number to choose a procedure."
