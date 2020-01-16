@@ -173,7 +173,7 @@ def confirm_procedure(hermes, intent_message):
                 resources_list += resource["title"] + ", "
 
             # create dialogue output for VUI
-            output_message = "All right! Here is, procedure {}. It has {} steps. Let me know, when you're ready, to start. For this procedure, you will need. {}".format(
+            output_message = "All right! Here is, procedure {}. It has {} steps. Let me know, when you're ready to start. For this procedure, you will need. {}".format(
                 procedure_title, total_steps, resources_list)
 
             if isConnected():
@@ -250,7 +250,7 @@ def next_step(hermes, intent_message):
             # Go to STATE 3.2: The Last Step
             STATE = 2
             print("STATE 3.2: Last Step")
-            output_message = "You are almost done! Please tell me when you are ready to finish. The last step is {}".format(
+            output_message = "You are almost done! Please tell me, when you are ready to finish. The last step is {}".format(
                 next_step_description)
         else:
             # Stay in STATE 3.1: Following the Steps
@@ -281,7 +281,7 @@ def finish_procedure(hermes, intent_message):
         STAGE = 0
         STATE = 0
         print("STATE 0.0: Initial")
-        output_message = "Very good! You have finished the procedure. The session ends here. I will now restart and you can ask me to start an experiment again."
+        output_message = "Very good! You have finished the procedure. The session ends here. I will now restart, and you can ask me to start an experiment again."
 
         if isConnected():
             # send request to GUI API to show the finish screen
@@ -357,7 +357,7 @@ def proceduresListOutput():
         procedures_list += str(order_number) + ". " + procedure["title"] + ". "
 
     # create dialogue output for VUI
-    output_message = "I have found, {} Procedures. You can, wake me up, and tell me a number, to choose a procedure. At any time, you can ask me to repeat, to listen, to the information again. You can also, ask me to cancel, and I will restart. Here are the procedures. {} ".format(
+    output_message = "I have found, {} Procedures. You can, wake me up, and tell me the number, to select a procedure. At any time, you can ask me to repeat, to listen to the information again. You can also, ask me to cancel, and I will restart. Here are the procedures. {} ".format(
         total_procedures, procedures_list)
 
     if isConnected():
@@ -401,12 +401,12 @@ def get_repeat_message_output():
 
     if STAGE == 1 and STATE == 1:
         print("Repeating message for: STATE 1.1")
-        output_message = "Okay! You can wake me up and tell me the number to choose a procedure. Here are, the procedures, again. {}".format(
+        output_message = "Okay! You can, wake me up, and tell me the number, to select a procedure. Here are, the procedures, again. {}".format(
             procedures_list)
 
     if STAGE == 2 and STATE == 1:
         print("Repeating message for: STATE 2.1")
-        output_message = "Of course! Let me know when you're ready to start the procedure {}. It has {} steps. Here is, what you will need, again. {}".format(
+        output_message = "Of course! Let me know, when you're ready, to start the procedure {}. It has {} steps. Here is, what you will need, again. {}".format(
             selected_procedure_title, total_steps, resources_list)
 
     if STAGE == 3 and STATE == 1:
@@ -415,7 +415,7 @@ def get_repeat_message_output():
 
         if current_step == 1:
             print("Repeating message for: STATE 3.1 and it's the first step")
-            output_message = "Okay! When you are ready for the next step, please say next step! Here is the first step again. {}".format(
+            output_message = "Okay! When you are ready, for the next step, please say next step! Here is, the first step, again. {}".format(
                 next_step_description)
 
         if current_step > 1 and current_step < total_steps:
