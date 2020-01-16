@@ -281,7 +281,17 @@ def finish_procedure(hermes, intent_message):
         STAGE = 0
         STATE = 0
         print("STATE 0.0: Initial")
+
         output_message = "Very good! You have finished the procedure. The session ends here. I will now restart, and you can ask me to start an experiment again."
+
+        # reset all global variables
+        procedures_list = ""
+        selected_procedure = 0
+        selected_procedure_title = ""
+        resources_list = ""
+        current_step = -1
+        procedure_steps = None
+        total_steps = -1
 
         if isConnected():
             # send request to GUI API to show the finish screen
@@ -335,8 +345,10 @@ def cancel_procedure(hermes, intent_message):
     total_steps = -1
 
     r = requests.post(GUI_ADDR + "/cancel", json={'cancel': 'true'})
-    return hermes.publish_end_session(intent_message.session_id,
-                                      "You cancelled the request")
+    return hermes.publish_end_session(
+        intent_message.session_id,
+        "You asked me to cancel. I will now restart, and you can ask me to start an experiment again."
+    )
 
 
 # auxiliary function to execute all the necessary steps to list procedures
@@ -491,3 +503,5 @@ with Hermes(MQTT_ADDR) as h:
         .subscribe_intent(INTENT_REPEAT, repeat) \
         .subscribe_intent(INTENT_HELP, help_intent) \
         .start()
+
+# TODO Manual, Repeat
