@@ -357,7 +357,7 @@ def proceduresListOutput():
         procedures_list += str(order_number) + ". " + procedure["title"] + ". "
 
     # create dialogue output for VUI
-    output_message = "I have found, {} Procedures,. You can, wake me up, and tell me, a number, to choose a procedure. At any time, you can ask me to repeat, to listen to, the information again. You can also, ask me, to cancel, and I will, restart. Here are, the procedures. {} ".format(
+    output_message = "I have found, {} Procedures. You can, wake me up, and tell me a number, to choose a procedure. At any time, you can ask me to repeat, to listen, to the information again. You can also, ask me to cancel, and I will restart. Here are the procedures. {} ".format(
         total_procedures, procedures_list)
 
     if isConnected():
