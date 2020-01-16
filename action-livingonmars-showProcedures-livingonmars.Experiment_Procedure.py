@@ -259,17 +259,18 @@ def next_step(hermes, intent_message):
             output_message = "Here is step {} out of {}. {}".format(
                 current_step, total_steps, next_step_description)
 
-    if isConnected():
-        # Sending the instructions to the GUI
-        r = requests.post(GUI_ADDR + "/showstep",
-                          json=procedure_steps["steps"][current_step - 1])
+        if isConnected():
+            # Sending the instructions to the GUI
+            r = requests.post(GUI_ADDR + "/showstep",
+                              json=procedure_steps["steps"][current_step - 1])
 
-    return hermes.publish_end_session(intent_message.session_id,
-                                      output_message)
+        return hermes.publish_end_session(intent_message.session_id,
+                                          output_message)
     else:
         output_message = get_manual_message_output()
         return hermes.publish_end_session(intent_message.session_id,
                                           output_message)
+
 
 # triggered when "livingonmars:chooseProcedure" is detected
 def finish_procedure(hermes, intent_message):
@@ -490,4 +491,3 @@ with Hermes(MQTT_ADDR) as h:
         .subscribe_intent(INTENT_REPEAT, repeat) \
         .subscribe_intent(INTENT_HELP, help_intent) \
         .start()
-
