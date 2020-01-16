@@ -369,7 +369,7 @@ def proceduresListOutput():
 
 # auxiliary function to get the procedures steps and the output message for the start procedure
 def get_procedure_steps():
-    global current_step
+    global current_step, procedure_steps
 
     # The index for the current step. We are always starting with the first step (0 in an array)
     current_step = 1
