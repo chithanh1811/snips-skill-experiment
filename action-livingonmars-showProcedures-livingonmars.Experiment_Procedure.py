@@ -250,7 +250,7 @@ def next_step(hermes, intent_message):
             # Go to STATE 3.2: The Last Step
             STATE = 2
             print("STATE 3.2: Last Step")
-            output_message = "You are almost done! Please tell me, when you are ready to finish. The last step is {}".format(
+            output_message = "You are almost done! Please tell me, when you are finished. The last step is {}".format(
                 next_step_description)
         else:
             # Stay in STATE 3.1: Following the Steps
@@ -282,7 +282,7 @@ def finish_procedure(hermes, intent_message):
         STATE = 0
         print("STATE 0.0: Initial")
 
-        output_message = "Very good! You have finished the procedure. The session ends here. I will now restart, and you can ask me to start an experiment again."
+        output_message = "Very good! You have finished the procedure. The session ends here. Let me know if you want to start another experiment."
 
         # reset all global variables
         procedures_list = ""
@@ -362,7 +362,7 @@ def proceduresListOutput():
     # create the list of procedures with the order number from the JSON
     total_procedures = 0
     order_number = 0
-
+    procedures_list = ""
     for procedure in procedures:
         order_number += 1
         total_procedures += 1
@@ -394,7 +394,7 @@ def get_procedure_steps():
     first_step = procedure_steps["steps"][current_step - 1]["description"]
 
     # create dialogue output for VUI
-    output_message = "Absolutely! Let's start! When you are ready for the next step, please say next step! Here is the first step. {} ".format(
+    output_message = "Let's start! When you are ready for the next step, please say next step! Here is the first step. {} ".format(
         first_step)
 
     return output_message
@@ -413,13 +413,13 @@ def get_repeat_message_output():
 
     if STAGE == 1 and STATE == 1:
         print("Repeating message for: STATE 1.1")
-        output_message = "Okay! You can, wake me up, and tell me the number, to select a procedure. Here are, the procedures, again. {}".format(
+        output_message = "Okay! You can, wake me up, and tell me the number, to select a procedure. Here are, the procedures. {}".format(
             procedures_list)
 
     if STAGE == 2 and STATE == 1:
         print("Repeating message for: STATE 2.1")
-        output_message = "Of course! Let me know, when you're ready, to start the procedure {}. It has {} steps. Here is, what you will need, again. {}".format(
-            selected_procedure_title, total_steps, resources_list)
+        output_message = "Of course! Let me know, when you're ready, to start the procedure {}. Here is, what you will need. {}".format(
+            selected_procedure_title, resources_list)
 
     if STAGE == 3 and STATE == 1:
         next_step_description = procedure_steps["steps"][current_step -
@@ -427,14 +427,14 @@ def get_repeat_message_output():
 
         if current_step == 1:
             print("Repeating message for: STATE 3.1 and it's the first step")
-            output_message = "Okay! When you are ready, for the next step, please say next step! Here is, the first step, again. {}".format(
+            output_message = "Okay! When you are ready, for the next step, please say next step! Here is, the first step. {}".format(
                 next_step_description)
 
         if current_step > 1 and current_step < total_steps:
             print(
                 "Repeating message for: STATE 3.1 and it's not the first step nor the last"
             )
-            output_message = "This is step {} out of {} again. {}".format(
+            output_message = "This is step {} out of {}. {}".format(
                 current_step, total_steps, next_step_description)
 
     if STAGE == 3 and STATE == 2:
