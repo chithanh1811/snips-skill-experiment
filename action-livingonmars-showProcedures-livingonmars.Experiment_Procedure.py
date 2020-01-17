@@ -148,7 +148,7 @@ def choose_procedure(hermes, intent_message):
 
 # triggered when "livingonmars:confirmProcedure" is detected
 def confirm_procedure(hermes, intent_message):
-    global STAGE, STATE, selected_procedure, total_steps, resources_list
+    global STAGE, STATE, selected_procedure, total_steps, resources_list, selected_procedure_title
 
     if STAGE == 1 and STATE == 2:
         # Go to STATE 2.1: Confirming the Selection & Listing the Ingredients
@@ -167,14 +167,14 @@ def confirm_procedure(hermes, intent_message):
             procedure = requests.get(DB_ADDR + "/procedures/" +
                                      str(selected_procedure)).json()
             resources_list = ""
-            procedure_title = procedure["procedure"]["title"]
+            selected_procedure_title = procedure["procedure"]["title"]
             total_steps = procedure["stepsCount"]
             for resource in procedure["resources"]:
                 resources_list += resource["title"] + ", "
 
             # create dialogue output for VUI
             output_message = "All right! Here is, procedure {}. It has {} steps. Let me know, when you're ready to start. For this procedure, you will need. {}".format(
-                procedure_title, total_steps, resources_list)
+                selected_procedure_title, total_steps, resources_list)
 
             if isConnected():
                 # request to GUI API to show the procedure detail
@@ -503,5 +503,3 @@ with Hermes(MQTT_ADDR) as h:
         .subscribe_intent(INTENT_REPEAT, repeat) \
         .subscribe_intent(INTENT_HELP, help_intent) \
         .start()
-
-# TODO Manual, Repeat
