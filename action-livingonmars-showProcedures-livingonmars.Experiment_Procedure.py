@@ -274,7 +274,7 @@ def next_step(hermes, intent_message):
 
 # triggered when "livingonmars:chooseProcedure" is detected
 def finish_procedure(hermes, intent_message):
-    global STAGE, STATE
+    global STAGE, STATE, procedures_list, selected_procedure, selected_procedure_title, resources_list, current_step, procedure_steps, total_steps
     if STAGE == 3 and STATE == 2:
         # Go to STATE FINALE: Finishing the Procedure
         print("STATE FINALE: Finishing the Procedure")
