@@ -148,7 +148,7 @@ def choose_procedure(hermes, intent_message):
 
 # triggered when "livingonmars:confirmProcedure" is detected
 def confirm_procedure(hermes, intent_message):
-    global STAGE, STATE, selected_procedure, total_steps
+    global STAGE, STATE, selected_procedure, total_steps, resources_list
 
     if STAGE == 1 and STATE == 2:
         # Go to STATE 2.1: Confirming the Selection & Listing the Ingredients
