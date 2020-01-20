@@ -361,33 +361,33 @@ def finish_procedure(hermes, intent_message):
 
     elif STAGE == 3:
 
-	    # increase the current step to move to the next
-	    current_step += 1
+        # increase the current step to move to the next
+        current_step += 1
 
-	    # get the description of the next step from the list
-	    step_description = procedure_steps["steps"][current_step - 1]["description"]
+        # get the description of the next step from the list
+        step_description = procedure_steps["steps"][current_step - 1]["description"]
 
-	    if STATE == 1:
-	        # Go to STATE 3.2: Following the Steps
-	        STATE = 2
-	        print ("STATE 3.2: Following the Steps")
-	        output_message = "Here is step {} out of {}. {}".format(
-	                current_step, total_steps, step_description)
-	        if isConnected():
-	            # Sending the instructions to the GUI
-	            r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
+        if STATE == 1:
+            # Go to STATE 3.2: Following the Steps
+            STATE = 2
+            print ("STATE 3.2: Following the Steps")
+            output_message = "Here is step {} out of {}. {}".format(
+                    current_step, total_steps, step_description)
+            if isConnected():
+                # Sending the instructions to the GUI
+                r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
 
-	    
-    	elif STATE == 2:
+        
+        elif STATE == 2:
        
             # Stay in STATE 3.2: Following the Steps
             print("STEP {}".format(current_step))
             output_message = "Here is step {} out of {}. {}".format(
                 current_step, total_steps, step_description)
-	        if isConnected():
-	            # Sending the instructions to the GUI
-	            r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
-	        
+            if isConnected():
+                # Sending the instructions to the GUI
+                r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
+            
     else:
         output_message = get_manual_message_output()
     
