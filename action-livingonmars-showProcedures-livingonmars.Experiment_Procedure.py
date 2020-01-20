@@ -190,7 +190,7 @@ def confirm_procedure(hermes, intent_message):
             STAGE = 1
             STATE = 1
             print("STATE 1.1: Listing Available Procedure")
-            output_message = proceduresListOutput()
+            output_message = get_repeat_message_output()
             # go back to procedure list
             r = requests.get(GUI_ADDR + "/cancel")
             return hermes.publish_end_session(intent_message.session_id,
@@ -388,7 +388,7 @@ def help_intent(hermes, intent_message):
 def cancel_procedure(hermes, intent_message):
     # TODO Disable the default Cancel command, so that we can apply our custom actions (reset our parameters)
     # https://docs.snips.ai/articles/platform/dialog/multi-turn-dialog/disable-safe-word
-    return publish_continue_session(intent_message.session_id,
+    return hermes.publish_continue_session(intent_message.session_id,
                                                "You are about to quit to the main menu. Are you sure?",
                                                [INTENT_CONFIRM, INTENT_CANCEL])
 
@@ -412,7 +412,7 @@ def proceduresListOutput():
         procedures_list += str(order_number) + ". " + procedure["title"] + ". "
 
     # create dialogue output for VUI
-    output_message = "I have found, {} experiments. You can, wake me up, and, tell me, the number, of the experiment you want to select. Here are the experiments. {} ".format(
+    output_message = "I have found, {}, experiments. You can, wake me up, and, tell me the number, of the experiment you want to select. Here are the experiments. {} ".format(
         total_procedures, procedures_list)
 
     if isConnected():
