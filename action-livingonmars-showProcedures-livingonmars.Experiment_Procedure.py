@@ -523,29 +523,29 @@ def get_manual_message_output():
     # get the message for the stage and state
     if STAGE == 0 and STATE == 0:
         print("Getting the manual for: STATE 0.0")
-        output_message = "Hi! We are deciding on what we can do together! Let me show you how I can help you. After I finish talking, you can, call me, by saying, hey Cassy, and ask me to, help you, or repeat, the introductory message. Right now, you can, call me, and say that you want to start an experiment!";
+        output_message = "Hi! We are deciding on what we can do together! Let me show you how I can help you. After I finish talking, you can call me by saying, hey Cassy, and ask me to, help you, or, repeat, the introductory message. Right now, you can call me, and say you want to start an experiment!";
     if STAGE == 1 and STATE == 1:
         print("Getting the manual for: STATE 1.1")
-        output_message = "Hey! We are selecting an experiment to start. After I finish talking, you can ask me to, help you, repeat, the message, or, end, the conversation. Right now, you can, call me, by saying, hey Cassy, and, tell me, the number, of the experiment you want to select!"
+        output_message = "Hey! We are selecting an experiment to start. After I finish talking, you can ask me to, help you, repeat the message, or, end the conversation. Right now, you can, call me, by saying, hey Cassy, and, tell me, the number, of the experiment you want to select!"
 
     if STAGE == 2 and STATE == 1:
         print("Getting the manual for: STATE 2.1")
-        output_message = "Hi! We are going through the reagents and equipment list for experiment, {}. After I finish talking, you can ask me to, help you, repeat, the message, or, end, the experiment and quit. Right now, you can call me, and let me know when you are, ready, to, start, the experiment!".format(
+        output_message = "Hi! We are going through the reagents and equipment list for experiment, {}. After I finish talking, you can ask me to, help you, repeat the message, or, end the experiment and quit. Right now, you can call me, and let me know when you are ready to start the experiment!".format(
             selected_procedure_title)
 
     if STAGE == 3 and STATE == 1:
         print("Getting the manual for: STATE 3.1")
-        output_message = "Hi! We are currently at, the first step, of the experiment, {}. Right now, you can ask me to, help you, repeat, the message, or, end, the experiment and quit. You can also call me, and let me know when you want me to, continue, to, the next step.".format(
+        output_message = "Hi! We are currently at, the first step, of the experiment, {}. Right now, you can ask me to, help you, repeat the message, or, end the experiment and quit. You can also call me, and let me know when you want me to continue to the next step.".format(
             selected_procedure_title)
 
     if STAGE == 3 and STATE == 2:
         print("Getting the manual for: STATE 3.2")
-        output_message = "Hi! We are currently at, step, {}, of the experiment. Right now, you can ask me to, help you, repeat, the message, or, end, the experiment and quit. You can also call me, and ask me to go to, the previous step, or, the next step, if you want to.".format(
+        output_message = "Hi! We are currently at, step, {}, of the experiment. Right now, you can ask me to, help you, repeat the message, or, end the experiment and quit. You can also call me, and ask me to go to the previous step, or, the next step, if you want to.".format(
             current_step)
 
     if STAGE == 3 and STATE == 3:
         print("Getting the manual for: STATE 3.3")
-        output_message = "Hi! We are currently at, the last step, of the experiment. Right now, you can ask me to, help you, or, repeat, the message. You can also call me, and ask me to, go to the, previous, step, or, finish, the experiment!".format(
+        output_message = "Hi! We are currently at, the last step, of the experiment. Right now, you can ask me to, help you, or, repeat the message. You can also call me, and ask me to go to the previous step, or, finish the experiment!".format(
             current_step)
 
     return output_message
