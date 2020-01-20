@@ -437,7 +437,7 @@ def get_procedure_steps():
     first_step = procedure_steps["steps"][current_step - 1]["description"]
 
     # create dialogue output for VUI
-    output_message = "Let's start! When you are ready for the next step, please say next step! Here is the first step. {} ".format(
+    output_message = "Let's start! When you are ready for the next step, please say, next! Here is the first step. {} ".format(
         first_step)
 
     return output_message
