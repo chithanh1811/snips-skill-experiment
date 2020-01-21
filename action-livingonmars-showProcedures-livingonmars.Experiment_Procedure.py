@@ -557,7 +557,7 @@ def get_repeat_message_output():
     if STAGE == 3 and STATE == 2:
         step_description = procedure_steps["steps"][current_step - 1]["description"]
         print("Repeating message for: STATE 3.2")
-        output_message = "Here is, step, {}, out of, {}. {}".format(
+        output_message = "Here is step {} out of {}. {}".format(
             current_step, total_steps, step_description)
 
     if STAGE == 3 and STATE == 3:
