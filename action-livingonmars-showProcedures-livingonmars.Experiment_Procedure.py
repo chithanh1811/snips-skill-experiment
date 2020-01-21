@@ -464,7 +464,7 @@ def cancel_procedure(hermes, intent_message):
                                                [INTENT_CONFIRM, INTENT_CANCEL])
 
     
- def hello(hermes, intent_message):
+def hello(hermes, intent_message):
     global STAGE, STATE
     if STAGE == 0 and STATE == 0:
         output_message = "Hello there! At the moment, I can help you to, conduct scientific experiences. If you want to know more about how to talk to me, call me, and say, help me. Now, if you want to do an experiment together with me, call me again after I finish talking, and say, I want to conduct and experiment, or simply, experiment. Have fun!"
@@ -634,7 +634,7 @@ def unrecognizedIntentHandler(hermes, intent_message):
         print("INTENT NOT RECOGNIZED, STATE 3.3")
         output_message = "I didn't understand what you're saying. Please call me again, and ask me to go to the previous step, or, finish the experiment!".format(
             current_step)
-        
+
     return hermes.publish_end_session(intent_message.session_id,
                                           output_message)
 
