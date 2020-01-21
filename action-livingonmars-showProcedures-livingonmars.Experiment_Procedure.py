@@ -60,8 +60,7 @@ def show_procedures(hermes, intent_message):
         # get the list of procedures and the dialogue output for VUI
         output_message = proceduresListOutput()
 
-        return hermes.publish_end_session(intent_message.session_id,
-                                          output_message)
+        return hermes.publish_end_session(intent_message.session_id, output_message, [], true)
     elif STAGE == 1 and STATE == 3:
         # Go to STATE 2.1: Showing Procedure Overview
         STAGE = 2
@@ -75,12 +74,10 @@ def show_procedures(hermes, intent_message):
             # Sending the instructions to the GUI
             r = requests.post(GUI_ADDR + "/start")
 
-        return hermes.publish_end_session(intent_message.session_id,
-                                          output_message)
+        return hermes.publish_end_session(intent_message.session_id, output_message, [], true)
     else:
         output_message = get_manual_message_output()
-        return hermes.publish_end_session(intent_message.session_id,
-                                          output_message)
+        return hermes.publish_end_session(intent_message.session_id, output_message, [], true)
 
 
 # triggered when "livingonmars:chooseProcedure" is detected
@@ -126,8 +123,7 @@ def choose_procedure(hermes, intent_message):
         elif raw_choice == "six":
             selected_procedure = 6
         else:
-            return hermes.publish_end_session(intent_message.session_id,
-                                              "Please select a number!")
+            return hermes.publish_end_session(intent_message.session_id, "Please select a number!", [], true)
             # TODO Test this. Changed from end_session to continue_session, so that the user can reselect once the wrong input is detected.
 
         # create dialogue output for VUI
@@ -140,13 +136,10 @@ def choose_procedure(hermes, intent_message):
             r = requests.post(GUI_ADDR + "/select",
                               json={'id': selected_procedure})
 
-        return hermes.publish_continue_session(intent_message.session_id,
-                                               output_message,
-                                               [INTENT_CONFIRM, INTENT_CANCEL])
+        return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM, INTENT_CANCEL], true)
     else:
         output_message = get_manual_message_output()
-        return hermes.publish_end_session(intent_message.session_id,
-                                          output_message)
+        return hermes.publish_end_session(intent_message.session_id, output_message, [], true)
 
 
 # triggered when "livingonmars:confirmProcedure" is detected
@@ -183,8 +176,7 @@ def confirm_procedure(hermes, intent_message):
                 # request to GUI API to show the procedure detail
                 r = requests.post(GUI_ADDR + "/confirm", json=procedure)
 
-            return hermes.publish_end_session(intent_message.session_id,
-                                              output_message)
+            return hermes.publish_end_session(intent_message.session_id, output_message, [], true)
         else:
             # user didn't confirm so the system resets
             # Go to STATE 1.1: Listing Available Procedure
@@ -195,7 +187,7 @@ def confirm_procedure(hermes, intent_message):
             # go back to procedure list
             r = requests.get(GUI_ADDR + "/cancel")
             return hermes.publish_end_session(intent_message.session_id,
-                                              output_message)
+                                              output_message, [], true)
         
 # triggered when "livingonmars:confirmExit" is detected
 def confirm_exit (hermes, intent_message):
@@ -218,11 +210,11 @@ def confirm_exit (hermes, intent_message):
 
         r = requests.post(GUI_ADDR + "/cancel", json={'cancel': 'true'})
         return hermes.publish_end_session(
-            intent_message.session_id, "Session terminated")
+            intent_message.session_id, "Session terminated", [], true)
     else:
         output_message = proceduresListOutput()
         return hermes.publish_end_session(intent_message.session_id,
-                                      output_message)  
+                                      output_message, [], true)  
 
 
 # action function that handles the response of the session of the START PROCEDURE intent
@@ -236,7 +228,7 @@ def start_procedure(hermes, intent_message):
         print("STATE 1.1: Listing Available Procedure")
         output_message = proceduresListOutput()
         return hermes.publish_end_session(intent_message.session_id,
-                                          output_message)
+                                          output_message, [], true)
 
     elif STAGE == 2 and STATE == 1:
         # Go to STATE 3.1: The First Step
@@ -252,11 +244,11 @@ def start_procedure(hermes, intent_message):
                               json=procedure_steps["steps"][current_step - 1])
 
         return hermes.publish_end_session(intent_message.session_id,
-                                          output_message)
+                                          output_message, [], true)
     else:
         output_message = get_manual_message_output()
         return hermes.publish_end_session(intent_message.session_id,
-                                          output_message)
+                                          output_message, [], true)
 
 
 # action function that handles the response of the session of the NEXT STEP intent
@@ -320,12 +312,12 @@ def next_step(hermes, intent_message):
             r = requests.get(GUI_ADDR + "/finish")
 
         return hermes.publish_end_session(intent_message.session_id,
-                                          output_message)
+                                          output_message, [], true)
 
     else:
         output_message = get_manual_message_output()    
 
-    return hermes.publish_end_session(intent_message.session_id, output_message)
+    return hermes.publish_end_session(intent_message.session_id, output_message, [], true)
 
 # triggered when "livingonmars:previousStep" is detected
 def previous_step(hermes, intent_message):
@@ -344,7 +336,7 @@ def previous_step(hermes, intent_message):
             # Go to STATE 3.1: The First Step
             STATE = 1
             print ("STATE 3.1: The First Step")
-            output_message = "Alright! Let's me know when you want to, navigate, to, the next step. Here is, the first step: {}".format(
+            output_message = "Alright! Let e know when you want to, navigate, to, the next step. Here is, the first step: {}".format(
                     current_step, total_steps, step_description)
             if isConnected():
                 # Sending the instructions to the GUI
@@ -362,7 +354,7 @@ def previous_step(hermes, intent_message):
         else:
             output_message = get_manual_message_output()    
 
-    return hermes.publish_end_session(intent_message.session_id, output_message)
+    return hermes.publish_end_session(intent_message.session_id, output_message, [], true)
 
 # triggered when "livingonmars:chooseProcedure" is detected
 def finish_procedure(hermes, intent_message):
@@ -390,7 +382,7 @@ def finish_procedure(hermes, intent_message):
             r = requests.get(GUI_ADDR + "/finish")
 
         return hermes.publish_end_session(intent_message.session_id,
-                                          output_message)
+                                          output_message, [], true)
 
     elif STAGE == 3:
 
@@ -432,7 +424,7 @@ def finish_procedure(hermes, intent_message):
         output_message = get_manual_message_output()
     
     return hermes.publish_end_session(intent_message.session_id,
-                                          output_message)
+                                          output_message, [], true)
 
 
 # triggered when "livingonmars:repeat" is detected
@@ -442,7 +434,7 @@ def repeat(hermes, intent_message):
     output_message = get_repeat_message_output()
 
     return hermes.publish_end_session(intent_message.session_id,
-                                      output_message)
+                                      output_message, [], true)
 
 
 # triggered when "livingonmars:help" is detected
@@ -452,7 +444,7 @@ def help_intent(hermes, intent_message):
     output_message = get_manual_message_output()
 
     return hermes.publish_end_session(intent_message.session_id,
-                                      output_message)
+                                      output_message, [], true)
 
 
 # triggered when "livingonmars:cancelProcedure" is detected
@@ -461,14 +453,14 @@ def cancel_procedure(hermes, intent_message):
     # https://docs.snips.ai/articles/platform/dialog/multi-turn-dialog/disable-safe-word
     return hermes.publish_continue_session(intent_message.session_id,
                                                "You are about to quit to the main menu. Are you sure?",
-                                               [INTENT_CONFIRM, INTENT_CANCEL])
+                                               [INTENT_CONFIRM, INTENT_CANCEL], [], true)
 
     
 def hello(hermes, intent_message):
     global STAGE, STATE
     if STAGE == 0 and STATE == 0:
         output_message = "Hello there! At the moment, I can help you to, conduct scientific experiences. If you want to know more about how to talk to me, call me, and say, help me. Now, if you want to do an experiment together with me, call me again after I finish talking, and say, I want to conduct and experiment, or simply, experiment. Have fun!"
-        return hermes.publish_end_session(intent_message.session_id, output_message)
+        return hermes.publish_end_session(intent_message.session_id, output_message, [], true)
 
 
 # auxiliary function to execute all the necessary steps to list procedures
@@ -543,7 +535,7 @@ def get_repeat_message_output():
     if STAGE == 3 and STATE == 1:
         step_description = procedure_steps["steps"][current_step - 1]["description"]
         print("Repeating message for: STATE 3.1")
-        output_message = "Alright! Let's me know when you want to, navigate, to, the next step. Here is, the first step: {}".format(
+        output_message = "Alright! Let me know when you want to, navigate, to, the next step. Here is, the first step: {}".format(
             step_description)
 
     if STAGE == 3 and STATE == 2:
@@ -636,7 +628,7 @@ def unrecognizedIntentHandler(hermes, intent_message):
             current_step)
 
     return hermes.publish_end_session(intent_message.session_id,
-                                          output_message)
+                                          output_message, [], true)
 
 
 # returns True if HDMI is connected
