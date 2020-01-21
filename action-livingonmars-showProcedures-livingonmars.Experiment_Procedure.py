@@ -264,7 +264,7 @@ def next_step(hermes, intent_message):
 
     # increase the current step to move to the next
     current_step += 1
-
+    print (current_step)
     # get the description of the next step from the list
     step_description = procedure_steps["steps"][current_step - 1]["description"]
     
@@ -272,7 +272,7 @@ def next_step(hermes, intent_message):
         # Go to STATE 3.2: Following the Steps
         STATE = 2
         print ("STATE 3.2: Following the Steps")
-        output_message = "Here is step {} out of {}. {}".format(
+        output_message = "Here is step, {}, out of, {}. {}".format(
                 current_step, total_steps, step_description)
         if isConnected():
             # Sending the instructions to the GUI
@@ -290,7 +290,7 @@ def next_step(hermes, intent_message):
         else:
             # Stay in STATE 3.2: Following the Steps
             print("STEP {}".format(current_step))
-            output_message = "Here is step {} out of {}. {}".format(
+            output_message = "Here is step, {}, out of, {}. {}".format(
                 current_step, total_steps, step_description)
         if isConnected():
             # Sending the instructions to the GUI
@@ -378,7 +378,7 @@ def finish_procedure(hermes, intent_message):
             # Go to STATE 3.2: Following the Steps
             STATE = 2
             print ("STATE 3.2: Following the Steps")
-            output_message = "Here is step {} out of {}. {}".format(
+            output_message = "Here is step, {}, out of, {}. {}".format(
                     current_step, total_steps, step_description)
             if isConnected():
                 # Sending the instructions to the GUI
@@ -389,7 +389,7 @@ def finish_procedure(hermes, intent_message):
        
             # Stay in STATE 3.2: Following the Steps
             print("STEP {}".format(current_step))
-            output_message = "Here is step {} out of {}. {}".format(
+            output_message = "Here is step, {}, out of, {}. {}".format(
                 current_step, total_steps, step_description)
             if isConnected():
                 # Sending the instructions to the GUI
@@ -493,7 +493,7 @@ def get_repeat_message_output():
 
     if STAGE == 1 and STATE == 1:
         print("Repeating message for: STATE 1.1")
-        output_message = "Okay! Please select an experiment, and tell me, its number: {}".format(
+        output_message = "Okay! Please select an experiment, and tell me its number: {}".format(
             procedures_list)
 
     if STAGE == 2 and STATE == 1:
