@@ -564,7 +564,7 @@ def get_manual_message_output():
         print("Getting the manual for: STATE 0.0")
         output_message = "Hi! We are deciding on what we can do together! Let me show you how I can help you. After I finish talking, you can call me by saying, hey Cassy, and ask me to, help you, or, repeat, the introductory message. Right now, you can call me, and say you want to start an experiment!";
     
-    if STAGE == 1 and STATE = 1:
+    if STAGE == 1 and STATE == 1:
         print("Getting the manual for: STATE 1.1")
         output_message = "Hey! We are selecting an experiment to start. After I finish talking, you can ask me to, help you, repeat the message, or, end the conversation. Right now, you can, call me, by saying, hey Cassy, and, tell me, the number, of the experiment you want to select!"
 
