@@ -201,29 +201,27 @@ def confirm_exit (hermes, intent_message):
     global STAGE, STATE, procedures_list, selected_procedure, selected_procedure_title, resources_list, current_step, procedure_steps, total_steps
     # get what the user said
     raw_choice = intent_message.slots.confirmation.first().value
-        # check if it's yes and we know the number of the selected procedure
-        if raw_choice == "yes" and selected_procedure != -1:
-            
-            print("STATE 0.0: Initial")
+    # check if it's yes and we know the number of the selected procedure
+    if raw_choice == "yes" and selected_procedure != -1:
+        print("STATE 0.0: Initial")
+        # reset all global variables
+        STATE = 0
+        STAGE = 0
+        procedures_list = ""
+        selected_procedure = 0
+        selected_procedure_title = ""
+        resources_list = ""
+        current_step = -1
+        procedure_steps = None
+        total_steps = -1
 
-            # reset all global variables
-            STATE = 0
-            STAGE = 0
-            procedures_list = ""
-            selected_procedure = 0
-            selected_procedure_title = ""
-            resources_list = ""
-            current_step = -1
-            procedure_steps = None
-            total_steps = -1
-
-            r = requests.post(GUI_ADDR + "/cancel", json={'cancel': 'true'})
-            return hermes.publish_end_session(
-                intent_message.session_id, "Session terminated")
-        else:
-            output_message = proceduresListOutput()
-            return hermes.publish_end_session(intent_message.session_id,
-                                          output_message)  
+        r = requests.post(GUI_ADDR + "/cancel", json={'cancel': 'true'})
+        return hermes.publish_end_session(
+            intent_message.session_id, "Session terminated")
+    else:
+        output_message = proceduresListOutput()
+        return hermes.publish_end_session(intent_message.session_id,
+                                      output_message)  
 
 
 # action function that handles the response of the session of the START PROCEDURE intent
