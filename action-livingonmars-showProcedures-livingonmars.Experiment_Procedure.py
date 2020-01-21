@@ -175,7 +175,7 @@ def confirm_procedure(hermes, intent_message):
                 resources_list += resource["title"] + ", "
 
             # create dialogue output for VUI
-            output_message = "All right! Here is, experiment {}. It has {} steps. Let me know, when you're ready to start. For this experiment, you will need. {}".format(
+            output_message = "All right! Here is experiment, {}. It has {} steps. Let me know, when you're ready to start. For this experiment, you will need. {}".format(
                 selected_procedure_title, total_steps, resources_list)
 
             if isConnected():
@@ -370,7 +370,7 @@ def finish_procedure(hermes, intent_message):
 
         # increase the current step to move to the next
         current_step += 1
-
+        print(current_step)
         # get the description of the next step from the list
         step_description = procedure_steps["steps"][current_step - 1]["description"]
 
@@ -386,14 +386,21 @@ def finish_procedure(hermes, intent_message):
 
         
         elif STATE == 2:
-       
-            # Stay in STATE 3.2: Following the Steps
-            print("STEP {}".format(current_step))
-            output_message = "Here is step, {}, out of, {}. {}".format(
-                current_step, total_steps, step_description)
-            if isConnected():
-                # Sending the instructions to the GUI
-                r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
+            # Check if the current step is the last step
+	        if current_step == total_steps:
+	            # Go to STATE 3.3: The Last Step
+	            STATE = 3
+	            print("STATE 3.3: Last Step")
+	            output_message = "You are almost done! Please tell me, when you are finished. The last step is {}".format(
+	                step_description)
+	        else:
+	            # Stay in STATE 3.2: Following the Steps
+	            print("STEP {}".format(current_step))
+	            output_message = "Here is step, {}, out of, {}. {}".format(
+	                current_step, total_steps, step_description)
+	        if isConnected():
+	            # Sending the instructions to the GUI
+	            r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
             
     else:
         output_message = get_manual_message_output()
@@ -450,7 +457,7 @@ def proceduresListOutput():
         procedures_list += str(order_number) + ". " + procedure["title"] + ". "
 
     # create dialogue output for VUI
-    output_message = "I have found, {}, experiments. You can, wake me up, and, tell me the number, of the experiment you want to select. Here are the experiments. {} ".format(
+    output_message = "I have found, {}, experiments. You can wake me up, and, tell me the number, of the experiment you want to select. Here are the experiments. {} ".format(
         total_procedures, procedures_list)
 
     if isConnected():
