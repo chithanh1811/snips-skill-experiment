@@ -136,7 +136,7 @@ def choose_procedure(hermes, intent_message):
             r = requests.post(GUI_ADDR + "/select",
                               json={'id': selected_procedure})
 
-        return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM, INTENT_CANCEL], True)
+        return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM, INTENT_CANCEL])
     else:
         output_message = get_manual_message_output()
         return hermes.publish_end_session(intent_message.session_id, output_message)
@@ -210,7 +210,7 @@ def confirm_exit (hermes, intent_message):
 
         r = requests.post(GUI_ADDR + "/cancel", json={'cancel': 'True'})
         return hermes.publish_end_session(
-            intent_message.session_id, "Session terminated", [], True)
+            intent_message.session_id, "Session terminated")
     else:
         output_message = proceduresListOutput()
         return hermes.publish_end_session(intent_message.session_id,
@@ -453,7 +453,7 @@ def cancel_procedure(hermes, intent_message):
     # https://docs.snips.ai/articles/platform/dialog/multi-turn-dialog/disable-safe-word
     return hermes.publish_continue_session(intent_message.session_id,
                                                "You are about to quit to the main menu. Are you sure?",
-                                               [INTENT_CONFIRM, INTENT_CANCEL], [], True)
+                                               [INTENT_CONFIRM, INTENT_CANCEL])
 
     
 def hello(hermes, intent_message):
@@ -653,5 +653,4 @@ with Hermes(MQTT_ADDR) as h:
         .subscribe_intent(INTENT_HELP, help_intent) \
         .subscribe_intent(INTENT_CONFIRM_EXIT, confirm_exit) \
         .subscribe_intent(INTENT_HELLO, hello) \
-        .subscribe_intent_not_recognized(unrecognizedIntentHandler) \
         .start()
