@@ -337,8 +337,7 @@ def previous_step(hermes, intent_message):
             # Go to STATE 3.1: The First Step
             STATE = 1
             print ("STATE 3.1: The First Step")
-            output_message = "Alright! Let e know when you want to, navigate, to, the next step. Here is, the first step: {}".format(
-                    current_step, total_steps, step_description)
+            output_message = "Alright! Let e know when you want to, navigate, to, the next step. Here is, the first step: {}".format(step_description)
             if isConnected():
                 # Sending the instructions to the GUI
                 r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
