@@ -661,5 +661,5 @@ with Hermes(MQTT_ADDR) as h:
         .subscribe_intent(INTENT_HELP, help_intent) \
         .subscribe_intent(INTENT_CONFIRM_EXIT, confirm_exit) \
         .subscribe_intent(INTENT_HELLO, hello) \
-        .subscribe_intent_not_recognized(unrecognizedIntentHandler\
+        .subscribe_intent_not_recognized(unrecognizedIntentHandler) \
         .start()
