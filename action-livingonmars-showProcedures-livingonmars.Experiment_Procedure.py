@@ -352,9 +352,9 @@ def previous_step(hermes, intent_message):
                 r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
         
         elif STAGE == 3 and STATE == 3:
-        	# Go back to STATE 3.2: Following the Steps
-        	STATE = 2
-        	print("STEP {}".format(current_step))
+            # Go back to STATE 3.2: Following the Steps
+            STATE = 2
+            print("STEP {}".format(current_step))
             output_message = "Here is step {} out of {}. {}".format(
                 current_step, total_steps, step_description)
             if isConnected():
