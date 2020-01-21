@@ -123,6 +123,7 @@ def choose_procedure(hermes, intent_message):
         elif raw_choice == "six":
             selected_procedure = 6
         else:
+        	STATE = 1
             return hermes.publish_end_session(intent_message.session_id, "Sorry, I didn't get it. Please call me again, and select a number from one, to six")
             # TODO Test this. Changed from end_session to continue_session, so that the user can reselect once the wrong input is detected.
 
@@ -452,7 +453,7 @@ def cancel_procedure(hermes, intent_message):
     # TODO Disable the default Cancel command, so that we can apply our custom actions (reset our parameters)
     # https://docs.snips.ai/articles/platform/dialog/multi-turn-dialog/disable-safe-word
     return hermes.publish_continue_session(intent_message.session_id,
-                                               "You are about to quit to the main menu. Are you sure?",
+                                               "You are about to go back to where we started. Are you sure?",
                                                [INTENT_CONFIRM, INTENT_CANCEL])
 
     
@@ -563,7 +564,7 @@ def get_manual_message_output():
         print("Getting the manual for: STATE 0.0")
         output_message = "Hi! We are deciding on what we can do together! Let me show you how I can help you. After I finish talking, you can call me by saying, hey Cassy, and ask me to, help you, or, repeat, the introductory message. Right now, you can call me, and say you want to start an experiment!";
     
-    if STAGE == 1:
+    if STAGE == 1 and STATE = 1:
         print("Getting the manual for: STATE 1.1")
         output_message = "Hey! We are selecting an experiment to start. After I finish talking, you can ask me to, help you, repeat the message, or, end the conversation. Right now, you can, call me, by saying, hey Cassy, and, tell me, the number, of the experiment you want to select!"
 
