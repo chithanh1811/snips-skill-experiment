@@ -200,7 +200,7 @@ def confirm_procedure(hermes, intent_message):
 def confirm_exit (hermes, intent_message):
     global STAGE, STATE, procedures_list, selected_procedure, selected_procedure_title, resources_list, current_step, procedure_steps, total_steps
     # get what the user said
-        raw_choice = intent_message.slots.confirmation.first().value
+    raw_choice = intent_message.slots.confirmation.first().value
         # check if it's yes and we know the number of the selected procedure
         if raw_choice == "yes" and selected_procedure != -1:
             
