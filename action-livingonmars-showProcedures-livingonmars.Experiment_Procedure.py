@@ -23,6 +23,7 @@ INTENT_FINISH = "livingonmars:finishProcedure"
 INTENT_REPEAT = "livingonmars:repeat"
 INTENT_HELP = "livingonmars:help"
 INTENT_CONFIRM_EXIT = "livingonmars:confirmExit"
+INTENT_HELLO = "livingonmars:hello"
 
 # addresses for connections to the DB and GUI API servers
 DB_ADDR = "http://localhost:8000"
@@ -296,6 +297,31 @@ def next_step(hermes, intent_message):
             # Sending the instructions to the GUI
             r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
     
+    elif STAGE == 3 and STATE == 3:
+        # Go to STATE FINALE: Finishing the Procedure
+        print("STATE FINALE: Finishing the Procedure")
+        STAGE = 0
+        STATE = 0
+        print("STATE 0.0: Initial")
+
+        output_message = "Very good! You have finished the experiment. The session ends here. Let's go back to where we started."
+
+        # reset all global variables
+        procedures_list = ""
+        selected_procedure = 0
+        selected_procedure_title = ""
+        resources_list = ""
+        current_step = -1
+        procedure_steps = None
+        total_steps = -1
+
+        if isConnected():
+            # send request to GUI API to show the finish screen
+            r = requests.get(GUI_ADDR + "/finish")
+
+        return hermes.publish_end_session(intent_message.session_id,
+                                          output_message)
+
     else:
         output_message = get_manual_message_output()    
 
@@ -306,7 +332,7 @@ def previous_step(hermes, intent_message):
     global STAGE, STATE, total_steps, current_step, procedure_steps
 
     if STAGE == 3 and STATE == 1:
-        output_message = "You are at the first step of the experiment."
+        output_message = "You are at the first step of the experiment." + get_procedure_steps()
     else:
         # increase the current step to move to the next
         current_step -= 1
@@ -387,20 +413,20 @@ def finish_procedure(hermes, intent_message):
         
         elif STATE == 2:
             # Check if the current step is the last step
-	        if current_step == total_steps:
-	            # Go to STATE 3.3: The Last Step
-	            STATE = 3
-	            print("STATE 3.3: Last Step")
-	            output_message = "You are almost done! Please tell me, when you are finished. The last step is {}".format(
-	                step_description)
-	        else:
-	            # Stay in STATE 3.2: Following the Steps
-	            print("STEP {}".format(current_step))
-	            output_message = "Here is step, {}, out of, {}. {}".format(
-	                current_step, total_steps, step_description)
-	        if isConnected():
-	            # Sending the instructions to the GUI
-	            r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
+            if current_step == total_steps:
+                # Go to STATE 3.3: The Last Step
+                STATE = 3
+                print("STATE 3.3: Last Step")
+                output_message = "You are almost done! Please tell me, when you are finished. The last step is {}".format(
+                    step_description)
+            else:
+                # Stay in STATE 3.2: Following the Steps
+                print("STEP {}".format(current_step))
+                output_message = "Here is step, {}, out of, {}. {}".format(
+                    current_step, total_steps, step_description)
+            if isConnected():
+                # Sending the instructions to the GUI
+                r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
             
     else:
         output_message = get_manual_message_output()
@@ -438,7 +464,13 @@ def cancel_procedure(hermes, intent_message):
                                                [INTENT_CONFIRM, INTENT_CANCEL])
 
     
-    
+ def hello(hermes, intent_message):
+    global STAGE, STATE
+    if STAGE == 0 and STATE == 0:
+        output_message = "Hello there! At the moment, I can help you to, conduct scientific experiences. If you want to know more about how to talk to me, call me, and say, help me. Now, if you want to do an experiment together with me, call me again after I finish talking, and say, I want to conduct and experiment, or simply, experiment. Have fun!"
+        return hermes.publish_end_session(intent_message.session_id, output_message)
+
+
 # auxiliary function to execute all the necessary steps to list procedures
 # returns the STRING outputMessage
 def proceduresListOutput():
@@ -564,6 +596,48 @@ def get_manual_message_output():
 
     return output_message
 
+# method executed when there is an unrecognized intent
+def unrecognizedIntentHandler(hermes, intent_message):
+    global STAGE, STATE, selected_procedure, procedures, total_steps, current_step
+
+    if STAGE == 0 and STATE == 0:
+        print("INTENT NOT RECOGNIZED, STATE 0.0")
+        output_message = "Sorry, I didn't understand that. Right now, you can call me, by saying, hey Cassy, and say you want to start an experiment!";
+    
+    if STAGE == 1 and STATE == 1:
+        print("INTENT NOT RECOGNIZED, STATE 1.1")
+        output_message = "Sorry, I didn't get it. Please call me, and, select a number from one, to six"
+
+    if STAGE == 1 and STATE == 2:
+        print("INTENT NOT RECOGNIZED, STATE 1.1")
+        output_message = "Sorry, I didn't understand that. You selected {}, {}. Is this correct?".format(
+            str(selected_procedure),
+            str(procedures[selected_procedure - 1]["title"]))
+        return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM, INTENT_CANCEL])
+
+    if STAGE == 2 and STATE == 1:
+        print("INTENT NOT RECOGNIZED, STATE 2.1")
+        output_message = "Sorry, I didn't understand that. Right now, you can call me, and let me know when you are ready to start the experiment!".format(
+            selected_procedure_title)
+
+    if STAGE == 3 and STATE == 1:
+        print("INTENT NOT RECOGNIZED, STATE 3.1")
+        output_message = "I don't understand what you just said, sorry. Please call me again, and let me know when you want to continue to the next step.".format(
+            selected_procedure_title)
+
+    if STAGE == 3 and STATE == 2:
+        print("INTENT NOT RECOGNIZED, STATE 3.2")
+        output_message = "Sorry, I didn't get it. You can call me, and ask me to go to the previous step, or, the next step, if you want to.".format(
+            current_step)
+
+    if STAGE == 3 and STATE == 3:
+        print("INTENT NOT RECOGNIZED, STATE 3.3")
+        output_message = "I didn't understand what you're saying. Please call me again, and ask me to go to the previous step, or, finish the experiment!".format(
+            current_step)
+        
+    return hermes.publish_end_session(intent_message.session_id,
+                                          output_message)
+
 
 # returns True if HDMI is connected
 def isConnected():
@@ -586,4 +660,6 @@ with Hermes(MQTT_ADDR) as h:
         .subscribe_intent(INTENT_REPEAT, repeat) \
         .subscribe_intent(INTENT_HELP, help_intent) \
         .subscribe_intent(INTENT_CONFIRM_EXIT, confirm_exit) \
+        .subscribe_intent(INTENT_HELLO, hello) \
+        .subscribe_intent_not_recognized(unrecognizedIntentHandler\
         .start()
