@@ -123,7 +123,7 @@ def choose_procedure(hermes, intent_message):
         elif raw_choice == "six":
             selected_procedure = 6
         else:
-            return hermes.publish_end_session(intent_message.session_id, "Please select a number!")
+            return hermes.publish_end_session(intent_message.session_id, "Sorry, I didn't get it. Please call me again, and select a number from one, to six")
             # TODO Test this. Changed from end_session to continue_session, so that the user can reselect once the wrong input is detected.
 
         # create dialogue output for VUI
