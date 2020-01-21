@@ -385,6 +385,22 @@ def finish_procedure(hermes, intent_message):
         return hermes.publish_end_session(intent_message.session_id,
                                           output_message)
 
+    elif STAGE == 2 and STATE == 1:
+        # Go to STATE 3.1: The First Step
+        STAGE = 3
+        STATE = 1
+        print("STATE 3.1: The First Step")
+
+        output_message = get_procedure_steps()
+
+        if isConnected():
+            # Sending the instructions to the GUI
+            r = requests.post(GUI_ADDR + "/showstep",
+                              json=procedure_steps["steps"][current_step - 1])
+
+        return hermes.publish_end_session(intent_message.session_id,
+                                          output_message)
+
     elif STAGE == 3:
 
         # increase the current step to move to the next
@@ -566,7 +582,7 @@ def get_manual_message_output():
     
     if STAGE == 1 and STATE == 1:
         print("Getting the manual for: STATE 1.1")
-        output_message = "Hey! We are selecting an experiment to start. After I finish talking, you can ask me to, help you, repeat the message, or, end the conversation. Right now, you can, call me, by saying, hey Cassy, and, tell me, the number, of the experiment you want to select!"
+        output_message = "Hey! We are selecting an experiment to start. After I finish talking, you can ask me to, help you, repeat the message, or, end the conversation. Right now, you can call me by saying, hey Cassy, and, tell me the number of the experiment you want to select!"
 
     if STAGE == 2 and STATE == 1:
         print("Getting the manual for: STATE 2.1")
@@ -600,7 +616,7 @@ def unrecognizedIntentHandler(hermes, intent_message):
     
     if STAGE == 1 and STATE == 1:
         print("INTENT NOT RECOGNIZED, STATE 1.1")
-        output_message = "Sorry, I didn't get it. Please call me, and, select a number from one, to six"
+        output_message = "Sorry, I didn't get it. Please call me, and, select a number from one to six"
 
     if STAGE == 1 and STATE == 2:
         print("INTENT NOT RECOGNIZED, STATE 1.1")
