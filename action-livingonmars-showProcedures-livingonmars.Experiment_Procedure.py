@@ -644,7 +644,6 @@ def get_wrong_intent_message():
         output_message = "Sorry, I didn't understand that. You selected {}, {}. Is this correct?".format(
             str(selected_procedure),
             str(procedures[selected_procedure - 1]["title"]))
-        return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM, INTENT_CANCEL])
 
     if STAGE == 2 and STATE == 1:
         print("INTENT NOT RECOGNIZED, STATE 2.1")
