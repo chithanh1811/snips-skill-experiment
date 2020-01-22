@@ -212,7 +212,7 @@ def confirm_procedure(hermes, intent_message):
 
     elif STAGE == 1 and STATE == 2 and intent_message.slots.confirmation.first() == None:
         # do the confirm again
-        return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM, INTENT_CANCEL])
+        return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM])
         
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
@@ -478,7 +478,7 @@ def cancel_procedure(hermes, intent_message):
     
     output_message = "You are about to go back to where we started. Are you sure?"
     
-    return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM_CANCEL, INTENT_CANCEL])
+    return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM_CANCEL])
         
 # triggered when "livingonmars:confirmExit" is detected
 def confirm_cancel (hermes, intent_message):
@@ -505,6 +505,7 @@ def confirm_cancel (hermes, intent_message):
         
         return hermes.publish_end_session(intent_message.session_id, output_message)
     else:
+        # TODO: check why is this output here again? not sure about it
         output_message = get_repeat_message_output()
         return hermes.publish_end_session(intent_message.session_id, output_message)  
 
