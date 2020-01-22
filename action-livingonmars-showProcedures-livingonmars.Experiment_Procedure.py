@@ -49,6 +49,7 @@ STAGE = 0
 # triggered when "livingonmars:hello" is detected
 def hello(hermes, intent_message):
     global STAGE, STATE
+    print("STATE 0.0: Initial")
 
     if STAGE == 0 and STATE == 0:
         output_message = "Hello there! I am here to help you to, conduct scientific experiences. If you want to know more about how to talk to me, call me, and ask for help. If you want to do an experiment with me, call me after I finish talking, and say, I want to do experiment. Have fun!"
@@ -158,16 +159,15 @@ def choose_procedure(hermes, intent_message):
 def confirm_procedure(hermes, intent_message):
     global STAGE, STATE, selected_procedure, total_steps, resources_list, selected_procedure_title
 
-    if STAGE == 1 and STATE == 2:
+    # if we are at the right stage and any slot was detected (yes or no answer was matched)
+    if STAGE == 1 and STATE == 2 and intent_message.slots.confirmation.first() != None:
         # Go to STATE 2.1: Confirming the Selection & Listing the Ingredients
         STAGE = 2
         STATE = 1
         print("STATE 2.1: Confirming the Selection & Listing the Ingredients")
 
         # get what the user said
-        raw_choice = ""
-        if intent_message.slots.confirmation.first() != None:
-            raw_choice = intent_message.slots.confirmation.first().value
+        raw_choice = intent_message.slots.confirmation.first().value
 
         # check if it's yes and we know the number of the selected procedure
         if raw_choice == "yes" and selected_procedure != -1:
@@ -192,7 +192,7 @@ def confirm_procedure(hermes, intent_message):
             
             return hermes.publish_end_session(intent_message.session_id, output_message)
 
-        elif raw_choice == "no":
+        else:
             # user said no so the system goes back to the list
             # Go to STATE 1.1: Listing Available Procedure
             STAGE = 1
@@ -666,8 +666,6 @@ def get_wrong_intent_message():
             current_step)
 
     return output_message
-
-
 
 # method executed when there is an unrecognized intent
 def unrecognizedIntentHandler(hermes, intent_message):
