@@ -54,7 +54,7 @@ def hello(hermes, intent_message):
         output_message = "Hello there! I am here to help you to, conduct scientific experiences. If you want to know more about how to talk to me, call me, and ask for help. If you want to do an experiment with me, call me after I finish talking, and say, I want to do experiment. Have fun!"
     else:
         # get the default message for this stage
-        output_message = unrecognizedIntentHandler()    
+        output_message = get_wrong_intent_message()    
 
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
@@ -88,7 +88,7 @@ def show_procedures(hermes, intent_message):
         return hermes.publish_end_session(intent_message.session_id, output_message)
     else:
         # get the default message for this stage
-        output_message = unrecognizedIntentHandler()
+        output_message = get_wrong_intent_message()
         return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # triggered when "livingonmars:chooseProcedure" is detected
@@ -151,7 +151,7 @@ def choose_procedure(hermes, intent_message):
         return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM, INTENT_CANCEL])
     else:
         # get the default message for this stage
-        output_message = unrecognizedIntentHandler()
+        output_message = get_wrong_intent_message()
         return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # triggered when "livingonmars:confirmProcedure" is detected
@@ -207,7 +207,7 @@ def confirm_procedure(hermes, intent_message):
             return hermes.publish_end_session(intent_message.session_id, output_message)
 
     # output message for wrong intent recognised or for a wrong answer that wasn't detected as YES or NO        
-    output_message = unrecognizedIntentHandler()
+    output_message = get_wrong_intent_message()
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # action function that handles the response of the session of the START PROCEDURE intent
@@ -240,7 +240,7 @@ def start_procedure(hermes, intent_message):
                                           output_message)
     else:
         # get the default message for this stage
-        output_message = unrecognizedIntentHandler()
+        output_message = get_wrong_intent_message()
         return hermes.publish_end_session(intent_message.session_id,
                                           output_message)
 
@@ -309,7 +309,7 @@ def next_step(hermes, intent_message):
 
     else:
         # get the default message for this stage
-        output_message = unrecognizedIntentHandler()    
+        output_message = get_wrong_intent_message()    
 
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
@@ -356,7 +356,7 @@ def previous_step(hermes, intent_message):
 
         else:
             # get the default message for this stage
-            output_message = unrecognizedIntentHandler()   
+            output_message = get_wrong_intent_message()  
 
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
@@ -442,7 +442,7 @@ def finish_procedure(hermes, intent_message):
             
     else:
         # get the default message for this stage
-        output_message = unrecognizedIntentHandler()
+        output_message = get_wrong_intent_message()
     
     return hermes.publish_end_session(intent_message.session_id,
                                           output_message)
@@ -625,6 +625,49 @@ def get_manual_message_output():
             current_step)
 
     return output_message
+
+# get the short message of contextualisation for when the wrong intent is recognised
+def get_wrong_intent_message():
+    global STAGE, STATE, selected_procedure, procedures, total_steps, current_step
+
+    if STAGE == 0 and STATE == 0:
+        print("INTENT NOT RECOGNIZED, STATE 0.0")
+        output_message = "Sorry, I didn't understand that. Right now, you can call me, by saying, hey Cassy, and say you want to start an experiment!";
+    
+    if STAGE == 1 and STATE == 1:
+        print("INTENT NOT RECOGNIZED, STATE 1.1")
+        output_message = "Sorry, I didn't get it. Please call me, and, select a number from one to six"
+
+    if STAGE == 1 and STATE == 2:
+        print("INTENT NOT RECOGNIZED, STATE 1.1")
+        output_message = "Sorry, I didn't understand that. You selected {}, {}. Is this correct?".format(
+            str(selected_procedure),
+            str(procedures[selected_procedure - 1]["title"]))
+        return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM, INTENT_CANCEL])
+
+    if STAGE == 2 and STATE == 1:
+        print("INTENT NOT RECOGNIZED, STATE 2.1")
+        output_message = "Sorry, I didn't understand that. Right now, you can call me, and let me know when you are ready to start the experiment!".format(
+            selected_procedure_title)
+
+    if STAGE == 3 and STATE == 1:
+        print("INTENT NOT RECOGNIZED, STATE 3.1")
+        output_message = "I don't understand what you just said, sorry. Please call me again, and let me know when you want to continue to the next step.".format(
+            selected_procedure_title)
+
+    if STAGE == 3 and STATE == 2:
+        print("INTENT NOT RECOGNIZED, STATE 3.2")
+        output_message = "Sorry, I didn't get it. You can call me, and ask me to go to the previous step, or, the next step, if you want to.".format(
+            current_step)
+
+    if STAGE == 3 and STATE == 3:
+        print("INTENT NOT RECOGNIZED, STATE 3.3")
+        output_message = "I didn't understand what you're saying. Please call me again, and ask me to go to the previous step, or, finish the experiment!".format(
+            current_step)
+
+    return output_message
+
+
 
 # method executed when there is an unrecognized intent
 def unrecognizedIntentHandler(hermes, intent_message):
