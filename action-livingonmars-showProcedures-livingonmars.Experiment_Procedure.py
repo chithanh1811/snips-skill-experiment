@@ -159,7 +159,10 @@ def choose_procedure(hermes, intent_message):
 # triggered when "livingonmars:confirmProcedure" is detected
 def confirm_procedure(hermes, intent_message):
     global STAGE, STATE, selected_procedure, total_steps, resources_list, selected_procedure_title
-
+   
+    # output message for wrong intent recognised or for a wrong answer that wasn't detected as YES or NO        
+    output_message = get_wrong_intent_message()
+   
     # if we are at the right stage and any slot was detected (yes or no answer was matched)
     if STAGE == 1 and STATE == 2 and intent_message.slots.confirmation.first() != None:
         # Go to STATE 2.1: Confirming the Selection & Listing the Ingredients
@@ -207,8 +210,10 @@ def confirm_procedure(hermes, intent_message):
             
             return hermes.publish_end_session(intent_message.session_id, output_message)
 
-    # output message for wrong intent recognised or for a wrong answer that wasn't detected as YES or NO        
-    output_message = get_wrong_intent_message()
+    elif STAGE == 1 and STATE == 2 and intent_message.slots.confirmation.first() == None:
+        # do the confirm again
+        return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM, INTENT_CANCEL])
+        
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # action function that handles the response of the session of the START PROCEDURE intent
