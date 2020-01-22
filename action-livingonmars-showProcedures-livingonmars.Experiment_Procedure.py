@@ -213,7 +213,7 @@ def confirm_exit (hermes, intent_message):
         return hermes.publish_end_session(
             intent_message.session_id, "Session terminated")
     else:
-        output_message = proceduresListOutput()
+        output_message = get_repeat_message_output()
         return hermes.publish_end_session(intent_message.session_id,
                                       output_message)  
 
