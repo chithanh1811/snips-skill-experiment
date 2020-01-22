@@ -165,7 +165,9 @@ def confirm_procedure(hermes, intent_message):
         print("STATE 2.1: Confirming the Selection & Listing the Ingredients")
 
         # get what the user said
-        raw_choice = intent_message.slots.confirmation.first().value
+        raw_choice = ""
+        if intent_message.slots.confirmation.first() != None:
+            raw_choice = intent_message.slots.confirmation.first().value
 
         # check if it's yes and we know the number of the selected procedure
         if raw_choice == "yes" and selected_procedure != -1:
@@ -187,9 +189,11 @@ def confirm_procedure(hermes, intent_message):
             if isConnected():
                 # request to GUI API to show the procedure detail
                 r = requests.post(GUI_ADDR + "/confirm", json=procedure)
+            
+            return hermes.publish_end_session(intent_message.session_id, output_message)
 
-        else:
-            # user didn't confirm so the system goes back to the list
+        elif raw_choice == "no":
+            # user said no so the system goes back to the list
             # Go to STATE 1.1: Listing Available Procedure
             STAGE = 1
             STATE = 1
@@ -200,9 +204,10 @@ def confirm_procedure(hermes, intent_message):
                 # go back to procedure list
                 r = requests.get(GUI_ADDR + "/confirm")
             
-    else:
-        output_message = unrecognizedIntentHandler()
+            return hermes.publish_end_session(intent_message.session_id, output_message)
 
+    # output message for wrong intent recognised or for a wrong answer that wasn't detected as YES or NO        
+    output_message = unrecognizedIntentHandler()
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # action function that handles the response of the session of the START PROCEDURE intent
