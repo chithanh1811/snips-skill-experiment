@@ -54,7 +54,7 @@ def hello(hermes, intent_message):
     if STAGE == 0 and STATE == 0:
         output_message = "Hello there! I am here to help you to, conduct scientific experiences. If you want to know more about how to talk to me, call me, and ask for help. If you want to do an experiment with me, call me after I finish talking, and say, I want to do experiment. Have fun!"
     else:
-        # get the default message for this stage
+        # get the default message for the current stage
         output_message = get_wrong_intent_message()    
 
     return hermes.publish_end_session(intent_message.session_id, output_message)
@@ -88,13 +88,13 @@ def show_procedures(hermes, intent_message):
 
         return hermes.publish_end_session(intent_message.session_id, output_message)
     else:
-        # get the default message for this stage
+        # get the default message for the current stage
         output_message = get_wrong_intent_message()
         return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # triggered when "livingonmars:chooseProcedure" is detected
 def choose_procedure(hermes, intent_message):
-    global STAGE, STATE, selected_procedure
+    global STAGE, STATE, selected_procedure, procedures
 
     if STAGE == 0 and STATE == 0:
         # Go to STATE 1.1: Listing Available Procedure
@@ -104,13 +104,6 @@ def choose_procedure(hermes, intent_message):
         output_message = proceduresListOutput()
         return hermes.publish_end_session(intent_message.session_id,
                                           output_message)
-    elif STAGE == 1 and STATE == 3:
-        # Go to STATE 2.1: Starting the Selected Experiment - Listing Ingredients
-        STAGE = 2
-        STATE = 1
-        print(
-            "STATE 2.1: Starting the Selected Experiment - Listing Ingredients"
-        )
     elif STAGE == 1 and STATE == 1:
         # Go to STATE 1.2: Selecting a Procedure
         STAGE = 1
@@ -150,8 +143,16 @@ def choose_procedure(hermes, intent_message):
                               json={'id': selected_procedure})
 
         return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM, INTENT_CANCEL])
+    elif STAGE == 1 and STATE == 3:
+        # Go to STATE 2.1: Starting the Selected Experiment - Listing Ingredients
+        STAGE = 2
+        STATE = 1
+        print(
+            "STATE 2.1: Starting the Selected Experiment - Listing Ingredients"
+        )
+    
     else:
-        # get the default message for this stage
+        # get the default message for the current stage
         output_message = get_wrong_intent_message()
         return hermes.publish_end_session(intent_message.session_id, output_message)
 
@@ -239,7 +240,7 @@ def start_procedure(hermes, intent_message):
         return hermes.publish_end_session(intent_message.session_id,
                                           output_message)
     else:
-        # get the default message for this stage
+        # get the default message for the current stage
         output_message = get_wrong_intent_message()
         return hermes.publish_end_session(intent_message.session_id,
                                           output_message)
@@ -308,7 +309,7 @@ def next_step(hermes, intent_message):
                                           output_message)
 
     else:
-        # get the default message for this stage
+        # get the default message for the current stage
         output_message = get_wrong_intent_message()    
 
     return hermes.publish_end_session(intent_message.session_id, output_message)
@@ -355,7 +356,7 @@ def previous_step(hermes, intent_message):
                 r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
 
         else:
-            # get the default message for this stage
+            # get the default message for the current stage
             output_message = get_wrong_intent_message()  
 
     return hermes.publish_end_session(intent_message.session_id, output_message)
@@ -441,7 +442,7 @@ def finish_procedure(hermes, intent_message):
                 r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
             
     else:
-        # get the default message for this stage
+        # get the default message for the current stage
         output_message = get_wrong_intent_message()
     
     return hermes.publish_end_session(intent_message.session_id,
@@ -639,7 +640,7 @@ def get_wrong_intent_message():
         output_message = "Sorry, I didn't get it. Please call me, and, select a number from one to six"
 
     if STAGE == 1 and STATE == 2:
-        print("INTENT NOT RECOGNIZED, STATE 1.1")
+        print("INTENT NOT RECOGNIZED, STATE 1.2")
         output_message = "Sorry, I didn't understand that. You selected {}, {}. Is this correct?".format(
             str(selected_procedure),
             str(procedures[selected_procedure - 1]["title"]))
