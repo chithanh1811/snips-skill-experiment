@@ -479,7 +479,7 @@ def cancel_procedure(hermes, intent_message):
     # https://docs.snips.ai/articles/platform/dialog/multi-turn-dialog/disable-safe-word
     return hermes.publish_continue_session(intent_message.session_id,
                                                "You are about to go back to where we started. Are you sure?",
-                                               [INTENT_CONFIRM, INTENT_CANCEL])
+                                               [INTENT_CONFIRM, INTENT_CANCEL_EXIT])
 
     
 def hello(hermes, intent_message):
