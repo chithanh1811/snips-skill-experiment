@@ -22,7 +22,7 @@ INTENT_PREVIOUS = "livingonmars:previousStep"
 INTENT_FINISH = "livingonmars:finishProcedure"
 INTENT_REPEAT = "livingonmars:repeat"
 INTENT_HELP = "livingonmars:help"
-INTENT_CONFIRM_EXIT = "livingonmars:confirmExit"
+INTENT_CONFIRM_CANCEL = "livingonmars:confirmExit"
 INTENT_HELLO = "livingonmars:hello"
 
 # addresses for connections to the DB and GUI API servers
@@ -49,9 +49,14 @@ STAGE = 0
 # triggered when "livingonmars:hello" is detected
 def hello(hermes, intent_message):
     global STAGE, STATE
+
     if STAGE == 0 and STATE == 0:
         output_message = "Hello there! I am here to help you to, conduct scientific experiences. If you want to know more about how to talk to me, call me, and ask for help. If you want to do an experiment with me, call me after I finish talking, and say, I want to do experiment. Have fun!"
-        return hermes.publish_end_session(intent_message.session_id, output_message)
+    else:
+        # get the default message for this stage
+        output_message = unrecognizedIntentHandler()    
+
+    return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # triggered when "livingonmars:showProcedures" is detected
 def show_procedures(hermes, intent_message):
@@ -82,7 +87,8 @@ def show_procedures(hermes, intent_message):
 
         return hermes.publish_end_session(intent_message.session_id, output_message)
     else:
-        output_message = get_manual_message_output()
+        # get the default message for this stage
+        output_message = unrecognizedIntentHandler()
         return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # triggered when "livingonmars:chooseProcedure" is detected
@@ -144,7 +150,8 @@ def choose_procedure(hermes, intent_message):
 
         return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM, INTENT_CANCEL])
     else:
-        output_message = get_manual_message_output()
+        # get the default message for this stage
+        output_message = unrecognizedIntentHandler()
         return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # triggered when "livingonmars:confirmProcedure" is detected
@@ -181,45 +188,22 @@ def confirm_procedure(hermes, intent_message):
                 # request to GUI API to show the procedure detail
                 r = requests.post(GUI_ADDR + "/confirm", json=procedure)
 
-            return hermes.publish_end_session(intent_message.session_id, output_message)
         else:
-            # user didn't confirm so the system resets
+            # user didn't confirm so the system goes back to the list
             # Go to STATE 1.1: Listing Available Procedure
             STAGE = 1
             STATE = 1
             print("STATE 1.1: Listing Available Procedure")
             output_message = get_repeat_message_output()
-            # go back to procedure list
-            r = requests.get(GUI_ADDR + "/cancel")
-            return hermes.publish_end_session(intent_message.session_id,
-                                              output_message)
-        
-# triggered when "livingonmars:confirmExit" is detected
-def confirm_exit (hermes, intent_message):
-    global STAGE, STATE, procedures_list, selected_procedure, selected_procedure_title, resources_list, current_step, procedure_steps, total_steps
-    # get what the user said
-    raw_choice = intent_message.slots.confirmation.first().value
-    # check if it's yes and we know the number of the selected procedure
-    if raw_choice == "yes" and selected_procedure != -1:
-        print("STATE 0.0: Initial")
-        # reset all global variables
-        STATE = 0
-        STAGE = 0
-        procedures_list = ""
-        selected_procedure = 0
-        selected_procedure_title = ""
-        resources_list = ""
-        current_step = -1
-        procedure_steps = None
-        total_steps = -1
-
-        r = requests.post(GUI_ADDR + "/cancel", json={'cancel': 'true'})
-        return hermes.publish_end_session(
-            intent_message.session_id, "Session terminated")
+            
+            if isConnected():
+                # go back to procedure list
+                r = requests.get(GUI_ADDR + "/confirm")
+            
     else:
-        output_message = proceduresListOutput()
-        return hermes.publish_end_session(intent_message.session_id,
-                                      output_message)  
+        output_message = unrecognizedIntentHandler()
+
+    return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # action function that handles the response of the session of the START PROCEDURE intent
 def start_procedure(hermes, intent_message):
@@ -250,7 +234,8 @@ def start_procedure(hermes, intent_message):
         return hermes.publish_end_session(intent_message.session_id,
                                           output_message)
     else:
-        output_message = get_manual_message_output()
+        # get the default message for this stage
+        output_message = unrecognizedIntentHandler()
         return hermes.publish_end_session(intent_message.session_id,
                                           output_message)
 
@@ -318,7 +303,8 @@ def next_step(hermes, intent_message):
                                           output_message)
 
     else:
-        output_message = get_manual_message_output()    
+        # get the default message for this stage
+        output_message = unrecognizedIntentHandler()    
 
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
@@ -364,7 +350,8 @@ def previous_step(hermes, intent_message):
                 r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
 
         else:
-            output_message = get_manual_message_output()    
+            # get the default message for this stage
+            output_message = unrecognizedIntentHandler()   
 
     return hermes.publish_end_session(intent_message.session_id, output_message)
 
@@ -449,7 +436,8 @@ def finish_procedure(hermes, intent_message):
                 r = requests.post(GUI_ADDR + "/showstep", json=procedure_steps["steps"][current_step - 1])
             
     else:
-        output_message = get_manual_message_output()
+        # get the default message for this stage
+        output_message = unrecognizedIntentHandler()
     
     return hermes.publish_end_session(intent_message.session_id,
                                           output_message)
@@ -473,12 +461,41 @@ def help_intent(hermes, intent_message):
                                       output_message)
 
 # triggered when "livingonmars:cancelProcedure" is detected
-def cancel_procedure(hermes, intent_message):
     # TODO Disable the default Cancel command, so that we can apply our custom actions (reset our parameters)
     # https://docs.snips.ai/articles/platform/dialog/multi-turn-dialog/disable-safe-word
-    return hermes.publish_continue_session(intent_message.session_id,
-                                               "You are about to go back to where we started. Are you sure?",
-                                               [INTENT_CONFIRM_EXIT, INTENT_CANCEL])
+def cancel_procedure(hermes, intent_message):
+    
+    output_message = "You are about to go back to where we started. Are you sure?"
+    
+    return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM_CANCEL, INTENT_CANCEL])
+        
+# triggered when "livingonmars:confirmExit" is detected
+def confirm_cancel (hermes, intent_message):
+    global STAGE, STATE, procedures_list, selected_procedure, selected_procedure_title, resources_list, current_step, procedure_steps, total_steps
+    # get what the user said
+    raw_choice = intent_message.slots.confirmation.first().value
+    # check if it's yes
+    if raw_choice == "yes":
+        print("STATE 0.0: Initial")
+        # reset all global variables
+        STATE = 0
+        STAGE = 0
+        procedures_list = ""
+        selected_procedure = 0
+        selected_procedure_title = ""
+        resources_list = ""
+        current_step = -1
+        procedure_steps = None
+        total_steps = -1
+        
+        output_message = "I have stopped the session. We are now going back to the start."
+        if isConnected():
+            r = requests.get(GUI_ADDR + "/cancel")
+        
+        return hermes.publish_end_session(intent_message.session_id, output_message)
+    else:
+        output_message = get_repeat_message_output()
+        return hermes.publish_end_session(intent_message.session_id, output_message)  
 
 # auxiliary function to execute all the necessary steps to list procedures
 # returns the STRING outputMessage
@@ -665,6 +682,6 @@ with Hermes(MQTT_ADDR) as h:
         .subscribe_intent(INTENT_FINISH, finish_procedure) \
         .subscribe_intent(INTENT_REPEAT, repeat) \
         .subscribe_intent(INTENT_HELP, help_intent) \
-        .subscribe_intent(INTENT_CONFIRM_EXIT, confirm_exit) \
+        .subscribe_intent(INTENT_CONFIRM_CANCEL, confirm_cancel) \
         .subscribe_intent(INTENT_HELLO, hello) \
         .start()
