@@ -50,7 +50,7 @@ STAGE = 0
 def hello(hermes, intent_message):
     global STAGE, STATE
     if STAGE == 0 and STATE == 0:
-        output_message = "Hello there! At the moment, I can help you to, conduct scientific experiences. If you want to know more about how to talk to me, call me, and say, help me. Now, if you want to do an experiment together with me, call me again after I finish talking, and say, I want to conduct and experiment, or simply, experiment. Have fun!"
+        output_message = "Hello there! I am here to help you to, conduct scientific experiences. If you want to know more about how to talk to me, call me, and ask for help. If you want to do an experiment with me, call me after I finish talking, and say, I want to do experiment. Have fun!"
         return hermes.publish_end_session(intent_message.session_id, output_message)
 
 # triggered when "livingonmars:showProcedures" is detected
