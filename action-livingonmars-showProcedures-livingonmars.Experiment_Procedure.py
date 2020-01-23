@@ -483,31 +483,40 @@ def cancel_procedure(hermes, intent_message):
 # triggered when "livingonmars:confirmExit" is detected
 def confirm_cancel (hermes, intent_message):
     global STAGE, STATE, procedures_list, selected_procedure, selected_procedure_title, resources_list, current_step, procedure_steps, total_steps
-    # get what the user said
-    raw_choice = intent_message.slots.confirmation.first().value
-    # check if it's yes
-    if raw_choice == "yes":
-        print("STATE 0.0: Initial")
-        # reset all global variables
-        STATE = 0
-        STAGE = 0
-        procedures_list = ""
-        selected_procedure = 0
-        selected_procedure_title = ""
-        resources_list = ""
-        current_step = -1
-        procedure_steps = None
-        total_steps = -1
+    
+    # check if anything was detected and mapped to a slot
+    if intent_message.slots.confirmation.first() != None:
+    
+        # get what the user said
+        raw_choice = intent_message.slots.confirmation.first().value
         
-        output_message = "I have stopped the session. We are now going back to the start."
-        if isConnected():
-            r = requests.get(GUI_ADDR + "/cancel")
-        
-        return hermes.publish_end_session(intent_message.session_id, output_message)
+        # check if it's yes
+        if raw_choice == "yes":
+            print("STATE 0.0: Initial")
+            # reset all global variables
+            STATE = 0
+            STAGE = 0
+            procedures_list = ""
+            selected_procedure = 0
+            selected_procedure_title = ""
+            resources_list = ""
+            current_step = -1
+            procedure_steps = None
+            total_steps = -1
+            
+            output_message = "I have stopped the session. We are now going back to the start."
+            if isConnected():
+                r = requests.get(GUI_ADDR + "/cancel")
+            
+            return hermes.publish_end_session(intent_message.session_id, output_message)
+        else:
+            # the answer was no, so the system repeats the message of the current stage
+            output_message = get_repeat_message_output()
+            return hermes.publish_end_session(intent_message.session_id, output_message)  
     else:
-        # TODO: check why is this output here again? not sure about it
-        output_message = get_repeat_message_output()
-        return hermes.publish_end_session(intent_message.session_id, output_message)  
+        # the slot was empty so the system asks to confirm again
+        output_message = "I didn't get that. You are about to go back to where we started. Are you sure?"
+        return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM_CANCEL])
 
 # auxiliary function to execute all the necessary steps to list procedures
 # returns the STRING outputMessage
@@ -565,7 +574,7 @@ def get_repeat_message_output():
     # get the message for the stage and state
     if STAGE == 0 and STATE == 0:
         print("Repeating message for: STATE 0.0")
-        output_message = "I didn't say anything yet! Ask me for help, and I will tell what you can do!"
+        output_message = "I didn't say anything yet! Ask me for help, and I will tell you what you can do!"
 
     if STAGE == 1 and STATE == 1:
         print("Repeating message for: STATE 1.1")
