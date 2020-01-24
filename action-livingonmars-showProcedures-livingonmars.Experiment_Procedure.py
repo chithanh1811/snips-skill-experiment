@@ -280,7 +280,7 @@ def next_step(hermes, intent_message):
                 # Go to STATE 3.3: The Last Step
                 STATE = 3
                 print("STATE 3.3: Last Step")
-                output_message = "You are almost done! Please tell me, when you are finished. The last step is {}".format(
+                output_message = "You are almost done! Please tell me, when you are finished. The last step is. {}".format(
                     step_description)
             elif current_step == 2:
                 # give the instruction about the previous only at this step
@@ -330,6 +330,7 @@ def next_step(hermes, intent_message):
 # triggered when "livingonmars:previousStep" is detected
 def previous_step(hermes, intent_message):
     global STAGE, STATE, total_steps, current_step, procedure_steps
+    print("Previous Step triggered!")
 
     if STAGE == 3 and STATE == 1:
         print("STATE 3.1: The First Step - current step was not updated")
@@ -359,8 +360,7 @@ def previous_step(hermes, intent_message):
         elif STATE == 2:
             # Stay in STATE 3.2: Following the Steps
             print("State 3.2 - STEP {}".format(current_step))
-            output_message = "Here is the previous step. {}".format(
-                current_step, total_steps, step_description)
+            output_message = "Here is the previous step. {}".format(step_description)
             if isConnected():
                 # Sending the instructions to the GUI
                 r = requests.post(GUI_ADDR + "/showstep",
@@ -370,8 +370,7 @@ def previous_step(hermes, intent_message):
             # Go back to STATE 3.2: Following the Steps
             STATE = 2
             print("State 3.3 - STEP {}".format(current_step))
-            output_message = "Here is the previous step. {}".format(
-                current_step, total_steps, step_description)
+            output_message = "Here is the previous step. {}".format(step_description)
             if isConnected():
                 # Sending the instructions to the GUI
                 r = requests.post(GUI_ADDR + "/showstep",
@@ -438,7 +437,7 @@ def finish_procedure(hermes, intent_message):
                 # Go to STATE 3.3: The Last Step
                 STATE = 3
                 print("STATE 3.3: Last Step")
-                output_message = "You are almost done! Please tell me, when you are finished. The last step is {}".format(
+                output_message = "You are almost done! Please tell me, when you are finished. The last step is. {}".format(
                     step_description)
             elif current_step == 2:
                 # give the instruction about the previous only at this step
@@ -545,7 +544,7 @@ def proceduresListOutput():
         procedures_list += str(order_number) + ". " + procedure["title"] + ". "
 
     # create dialogue output for VUI
-    output_message = "I have found, {}, experiments. You can wake me up, and, tell me the number, of the experiment you want to select. Here are the experiments. {} ".format(
+    output_message = "I have found, {}, experiments. You can wake me up and, tell me the number, of the experiment you want to select. Here are the experiments. {} ".format(
         total_procedures, procedures_list)
 
     if isConnected():
@@ -587,7 +586,7 @@ def get_repeat_message_output():
 
     if STAGE == 1 and STATE == 1:
         print("Repeating message for: STATE 1.1")
-        output_message = "Okay! Please select an experiment, and tell me its number: {}".format(
+        output_message = "Okay! Please select an experiment, and tell me its number. {}".format(
             procedures_list)
 
     if STAGE == 2 and STATE == 1:
@@ -612,7 +611,7 @@ def get_repeat_message_output():
         step_description = procedure_steps["steps"][current_step -
                                                     1]["description"]
         print("Repeating message for: STATE 3.3")
-        output_message = "Alright! Please tell me when you are done. The last step is {}".format(
+        output_message = "Alright! Please tell me when you are done. The last step is. {}".format(
             step_description)
 
     return output_message
@@ -657,7 +656,7 @@ def get_wrong_intent_message():
 
     if STAGE == 0 and STATE == 0:
         print("WRONG INTENT RECOGNIZED, STATE 0.0")
-        output_message = "Sorry, I didn't understand that. Right now, you can call me, by saying, hey Cassy, and say you want to start an experiment!"
+        output_message = "Sorry, I didn't understand that. Right now, you can call me by saying, hey Cassy, and say you want to start an experiment!"
 
     if STAGE == 1 and STATE == 1:
         print("WRONG INTENT RECOGNIZED, STATE 1.1")
