@@ -267,7 +267,8 @@ def next_step(hermes, intent_message):
             # Go to STATE 3.2: Following the Steps
             STATE = 2
             print("STATE 3.2: Following the Steps")
-            output_message = "Here is step, {}, out of, {}. {}".format(
+            print("The current step is: " + str(current_step))
+            output_message = "To hear the previous step, tell me to go back. Here is step, {}, out of, {}. {}".format(
                 current_step, total_steps, step_description)
             if isConnected():
                 # Sending the instructions to the GUI
@@ -282,10 +283,6 @@ def next_step(hermes, intent_message):
                 print("STATE 3.3: Last Step")
                 output_message = "You are almost done! Please tell me, when you are finished. The last step is. {}".format(
                     step_description)
-            elif current_step == 2:
-                # give the instruction about the previous only at this step
-                output_message = "To hear the previous step, tell me to go back. Here is step, {}, out of, {}. {}".format(
-                    current_step, total_steps, step_description)
             else:
                 # Stay in STATE 3.2: Following the Steps
                 print("STATE 3.2 - STEP {}".format(current_step))
@@ -424,7 +421,7 @@ def finish_procedure(hermes, intent_message):
             # Go to STATE 3.2: Following the Steps
             STATE = 2
             print("STATE 3.2: Following the Steps")
-            output_message = "Alright, but we are not at the last step yet, so here is the next step. This is step, {}, out of, {}. {}".format(
+            output_message = "Alright, but we are not at the last step yet, so here is the next step. To hear the previous step, tell me to go back. This is step, {}, out of, {}. {}".format(
                 current_step, total_steps, step_description)
             if isConnected():
                 # Sending the instructions to the GUI
@@ -439,10 +436,6 @@ def finish_procedure(hermes, intent_message):
                 print("STATE 3.3: Last Step")
                 output_message = "You are almost done! Please tell me, when you are finished. The last step is. {}".format(
                     step_description)
-            elif current_step == 2:
-                # give the instruction about the previous only at this step
-                output_message = "To hear the previous step, tell me to go back. Here is step, {}, out of, {}. {}".format(
-                    current_step, total_steps, step_description)
             else:
                 # Stay in STATE 3.2: Following the Steps
                 print("STATE 3.2 - STEP {}".format(current_step))
@@ -625,7 +618,7 @@ def get_manual_message_output():
     # get the message for the stage and state
     if STAGE == 0 and STATE == 0:
         print("Getting the manual for: STATE 0.0")
-        output_message = "Hi! Let me show you how I can help you. After I finish talking, you can call me by saying, hey Cassy, and ask me to repeat or ask me to stop. Right now, you can call me, and say you want to start an experiment!"
+        output_message = "Hi! Let me show you how I can help you. After I finish talking, you can call me by saying, hey Snips, and ask me to repeat or ask me to stop. Right now, you can call me, and say you want to start an experiment!"
 
     if STAGE == 1 and STATE == 1:
         print("Getting the manual for: STATE 1.1")
@@ -656,7 +649,7 @@ def get_wrong_intent_message():
 
     if STAGE == 0 and STATE == 0:
         print("WRONG INTENT RECOGNIZED, STATE 0.0")
-        output_message = "Sorry, I didn't understand that. Right now, you can call me by saying, hey Cassy, and say you want to start an experiment!"
+        output_message = "Sorry, I didn't understand that. Right now, you can call me by saying, hey Snips, and say you want to start an experiment!"
 
     if STAGE == 1 and STATE == 1:
         print("WRONG INTENT RECOGNIZED, STATE 1.1")
