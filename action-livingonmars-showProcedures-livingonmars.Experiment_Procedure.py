@@ -258,7 +258,7 @@ def next_step(hermes, intent_message):
     if STAGE == 3:
         # increase the current step to move to the next
         current_step += 1
-        print("The current step is: " + current_step)
+        print("The current step is: " + str(current_step))
         # get the description of the next step from the list
         step_description = procedure_steps["steps"][current_step -
                                                     1]["description"]
@@ -415,7 +415,7 @@ def finish_procedure(hermes, intent_message):
     elif STAGE == 3:
         # increase the current step to move to the next
         current_step += 1
-        print("The current step is: " + current_step)
+        print("The current step is: " + str(current_step))
 
         # get the description of the next step from the list
         step_description = procedure_steps["steps"][current_step -
