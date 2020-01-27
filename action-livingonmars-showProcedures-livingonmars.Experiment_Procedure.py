@@ -731,7 +731,7 @@ def isConnected():
     #proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     #o, e = proc.communicate()
     # return re.search("^state 0x.*a$", o.decode('ascii'))
-    return False
+    return True
 
 
 with Hermes(MQTT_ADDR) as h:
