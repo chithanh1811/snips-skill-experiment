@@ -653,7 +653,7 @@ def get_wrong_intent_message():
 
     if STAGE == 1 and STATE == 1:
         print("WRONG INTENT RECOGNIZED, STATE 1.1")
-        output_message = "Sorry, I didn't get that. Please call me, and, select a number from one to six"
+        output_message = "I didn't get that. Please call me, and, select a number from one to six"
 
     if STAGE == 1 and STATE == 2:
         print("WRONG INTENT RECOGNIZED, STATE 1.2")
