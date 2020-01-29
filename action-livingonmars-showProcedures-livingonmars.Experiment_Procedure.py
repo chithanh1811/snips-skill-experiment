@@ -537,7 +537,7 @@ def proceduresListOutput():
         procedures_list += str(order_number) + ". " + procedure["title"] + ". "
 
     # create dialogue output for VUI
-    output_message = "I have found, {}, experiments. You can wake me up and, tell me the number, of the experiment you want to select. Here are the experiments. {} ".format(
+    output_message = "I have found, {}, experiments. You can wake me up and tell me the number, of the experiment you want to select. Here are the experiments. {} ".format(
         total_procedures, procedures_list)
 
     if isConnected():
@@ -626,11 +626,11 @@ def get_manual_message_output():
 
     if STAGE == 2 and STATE == 1:
         print("Getting the manual for: STATE 2.1")
-        output_message = "Right now, I'm telling you the resources you need for this experiment. After I finishe talking, you can ask me to, start the experiment, repeat the message, or to stop. Call me, and say start the experiment!"
+        output_message = "Right now, I'm telling you the resources you need for this experiment. After I finishe talking, you can ask me to, start the experiment, repeat the message, or to stop."
 
     if STAGE == 3 and STATE == 1:
         print("Getting the manual for: STATE 3.1")
-        output_message = "We are currently at, the first step, of this experiment. You can ask me to continue, to repeat the message, or to stop the experiment. Call me, and say continue to the next step."
+        output_message = "We are currently at, the first step, of this experiment. You can ask me to continue to the next step, to repeat the message, or to stop the experiment."
 
     if STAGE == 3 and STATE == 2:
         print("Getting the manual for: STATE 3.2")
@@ -639,7 +639,7 @@ def get_manual_message_output():
 
     if STAGE == 3 and STATE == 3:
         print("Getting the manual for: STATE 3.3")
-        output_message = "We are currently at, the last step. You can ask me to, repeat the message. You can also call me, and ask me to go to the previous step, or to finish the experiment!"
+        output_message = "We are currently at, the last step. You can ask me to, repeat the message. You can also call me, and ask me to go to the previous step, or to finishe the experiment!"
 
     return output_message
 
