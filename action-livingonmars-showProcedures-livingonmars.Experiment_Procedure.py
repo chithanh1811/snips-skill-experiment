@@ -618,15 +618,15 @@ def get_manual_message_output():
     # get the message for the stage and state
     if STAGE == 0 and STATE == 0:
         print("Getting the manual for: STATE 0.0")
-        output_message = "Hi! Let me show you how I can help you. After I finish talking, you can call me by saying, hey Snips, and ask me to repeat or ask me to stop. Right now, you can call me, and say you want to start an experiment!"
+        output_message = "Hi! Let me show you how I can help you. After I finishe talking, you can call me by saying, hey Snips, and ask me to repeat or ask me to stop. Right now, you can call me, and say you want to start an experiment!"
 
     if STAGE == 1 and STATE == 1:
         print("Getting the manual for: STATE 1.1")
-        output_message = "We are selecting an experiment to start. After I finish talking, you can ask me to, select an experiment, repeat the message, or, stop the conversation. To select an experiment, tell me its number!"
+        output_message = "We are selecting an experiment to start. After I finishe talking, you can ask me to, select an experiment, repeat the message, or, stop the conversation. To select an experiment, tell me its number!"
 
     if STAGE == 2 and STATE == 1:
         print("Getting the manual for: STATE 2.1")
-        output_message = "Right now, I'm telling you the resources you need for this experiment. After I finish talking, you can ask me to, start the experiment, repeat the message, or, to stop. Call me, and say start the experiment!"
+        output_message = "Right now, I'm telling you the resources you need for this experiment. After I finishe talking, you can ask me to, start the experiment, repeat the message, or, to stop. Call me, and say start the experiment!"
 
     if STAGE == 3 and STATE == 1:
         print("Getting the manual for: STATE 3.1")
@@ -678,7 +678,7 @@ def get_wrong_intent_message():
 
     if STAGE == 3 and STATE == 3:
         print("WRONG INTENT RECOGNIZED, STATE 3.3")
-        output_message = "I didn't understand what you're saying. Please call me again, and ask me to go to the previous step, or, to finish the experiment!".format(
+        output_message = "I didn't understand what you're saying. Please call me again, and ask me to go to the previous step, or, to finishe the experiment!".format(
             current_step)
 
     return output_message
