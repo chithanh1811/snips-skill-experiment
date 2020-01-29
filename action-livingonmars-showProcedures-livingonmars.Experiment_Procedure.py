@@ -347,7 +347,7 @@ def previous_step(hermes, intent_message):
             # Go to STATE 3.1: The First Step
             STATE = 1
             print("STATE 3.1: The First Step")
-            output_message = "Alright! Let me know when you want to navigate, to the next step. Here is the first step: {}".format(
+            output_message = "Alright! Here is the first step: {}".format(
                 step_description)
             if isConnected():
                 # Sending the instructions to the GUI
@@ -591,7 +591,7 @@ def get_repeat_message_output():
         step_description = procedure_steps["steps"][current_step -
                                                     1]["description"]
         print("Repeating message for: STATE 3.1")
-        output_message = "Alright! Let me know when you want to, navigate to the next step. Here is the first step: {}".format(
+        output_message = "Alright! Let me know when you are ready for the next step. Here is the first step: {}".format(
             step_description)
 
     if STAGE == 3 and STATE == 2:
