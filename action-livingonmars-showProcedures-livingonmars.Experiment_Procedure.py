@@ -129,7 +129,7 @@ def choose_procedure(hermes, intent_message):
             selected_procedure = 6
         else:
             STATE = 1
-            return hermes.publish_end_session(intent_message.session_id, "Sorry, I didn't get that. Please call me again, and select a number from one, to six")
+            return hermes.publish_end_session(intent_message.session_id, "Sorry, I didn't get that. Please call me again, and select a number from one to six")
             # TODO Test this. Changed from end_session to continue_session, so that the user can reselect once the wrong input is detected.
 
         # create dialogue output for VUI
@@ -187,7 +187,7 @@ def confirm_procedure(hermes, intent_message):
                 resources_list += resource["title"] + ", "
 
             # create dialogue output for VUI
-            output_message = "All right! Here is experiment, {}. It has {} steps. Let me know, when you're ready to start. For this experiment, you will need. {}".format(
+            output_message = "All right! Here is experiment {}. It has {} steps. Let me know, when you're ready to start. For this experiment, you will need. {}".format(
                 selected_procedure_title, total_steps, resources_list)
 
             if isConnected():
@@ -268,7 +268,7 @@ def next_step(hermes, intent_message):
             STATE = 2
             print("STATE 3.2: Following the Steps")
             print("The current step is: " + str(current_step))
-            output_message = "To hear the previous step, tell me to go back. Here is step, {}, out of, {}. {}".format(
+            output_message = "To hear the previous step, tell me to go back. Here is step {}, out of {}. {}".format(
                 current_step, total_steps, step_description)
             if isConnected():
                 # Sending the instructions to the GUI
@@ -347,7 +347,7 @@ def previous_step(hermes, intent_message):
             # Go to STATE 3.1: The First Step
             STATE = 1
             print("STATE 3.1: The First Step")
-            output_message = "Alright! Let me know when you want to, navigate, to, the next step. Here is, the first step: {}".format(
+            output_message = "Alright! Let me know when you want to navigate, to the next step. Here is the first step: {}".format(
                 step_description)
             if isConnected():
                 # Sending the instructions to the GUI
@@ -421,7 +421,7 @@ def finish_procedure(hermes, intent_message):
             # Go to STATE 3.2: Following the Steps
             STATE = 2
             print("STATE 3.2: Following the Steps")
-            output_message = "Alright, but we are not at the last step yet, so here is the next step. To hear the previous step, tell me to go back. This is step, {}, out of, {}. {}".format(
+            output_message = "Alright, but we are not at the last step yet, so here is the next step. To hear the previous step, tell me to go back. This is step {}, out of {}. {}".format(
                 current_step, total_steps, step_description)
             if isConnected():
                 # Sending the instructions to the GUI
@@ -439,7 +439,7 @@ def finish_procedure(hermes, intent_message):
             else:
                 # Stay in STATE 3.2: Following the Steps
                 print("STATE 3.2 - STEP {}".format(current_step))
-                output_message = "Alright, but we are not at the last step yet, so here is the next step. This is step, {}, out of, {}. {}".format(
+                output_message = "Alright, but we are not at the last step yet, so here is the next step. This is step {}, out of {}. {}".format(
                     current_step, total_steps, step_description)
             if isConnected():
                 # Sending the instructions to the GUI
@@ -562,7 +562,7 @@ def get_procedure_steps():
     first_step = procedure_steps["steps"][current_step - 1]["description"]
 
     # create dialogue output for VUI
-    output_message = "Let's start! When you are ready for the next step, please say, next! Here is the first step. {} ".format(
+    output_message = "Let's start! When you are ready for the next step, please say next! Here is the first step. {} ".format(
         first_step)
 
     return output_message
@@ -584,14 +584,14 @@ def get_repeat_message_output():
 
     if STAGE == 2 and STATE == 1:
         print("Repeating message for: STATE 2.1")
-        output_message = "Here is what you will need for the experiment, {}. {}. Please call me and say, start experiment, to go on.".format(
+        output_message = "Here is what you will need for the experiment, {}. {}. To go on, please call me and say, start experiment.".format(
             selected_procedure_title, resources_list)
 
     if STAGE == 3 and STATE == 1:
         step_description = procedure_steps["steps"][current_step -
                                                     1]["description"]
         print("Repeating message for: STATE 3.1")
-        output_message = "Alright! Let me know when you want to, navigate, to, the next step. Here is, the first step: {}".format(
+        output_message = "Alright! Let me know when you want to, navigate to the next step. Here is the first step: {}".format(
             step_description)
 
     if STAGE == 3 and STATE == 2:
@@ -622,24 +622,24 @@ def get_manual_message_output():
 
     if STAGE == 1 and STATE == 1:
         print("Getting the manual for: STATE 1.1")
-        output_message = "We are selecting an experiment to start. After I finishe talking, you can ask me to, select an experiment, repeat the message, or, stop the conversation. To select an experiment, tell me its number!"
+        output_message = "We are selecting an experiment to start. After I finishe talking, you can ask me to, select an experiment, repeat the message, or stop the conversation. To select an experiment, tell me its number!"
 
     if STAGE == 2 and STATE == 1:
         print("Getting the manual for: STATE 2.1")
-        output_message = "Right now, I'm telling you the resources you need for this experiment. After I finishe talking, you can ask me to, start the experiment, repeat the message, or, to stop. Call me, and say start the experiment!"
+        output_message = "Right now, I'm telling you the resources you need for this experiment. After I finishe talking, you can ask me to, start the experiment, repeat the message, or to stop. Call me, and say start the experiment!"
 
     if STAGE == 3 and STATE == 1:
         print("Getting the manual for: STATE 3.1")
-        output_message = "We are currently at, the first step, of this experiment. You can ask me to continue, to repeat the message, or, to stop the experiment. Call me, and say continue to the next step."
+        output_message = "We are currently at, the first step, of this experiment. You can ask me to continue, to repeat the message, or to stop the experiment. Call me, and say continue to the next step."
 
     if STAGE == 3 and STATE == 2:
         print("Getting the manual for: STATE 3.2")
-        output_message = "We are currently at, step, {}. You can ask me to, repeat the message, or, to stop the experiment. You can also call me, and ask me to go to the previous step, or, the next step.".format(
+        output_message = "We are currently at, step, {}. You can ask me to, repeat the message, or to stop the experiment. You can also call me, and ask me to go to the previous step, or the next step.".format(
             current_step)
 
     if STAGE == 3 and STATE == 3:
         print("Getting the manual for: STATE 3.3")
-        output_message = "We are currently at, the last step. You can ask me to, repeat the message. You can also call me, and ask me to go to the previous step, or, to finish the experiment!"
+        output_message = "We are currently at, the last step. You can ask me to, repeat the message. You can also call me, and ask me to go to the previous step, or to finish the experiment!"
 
     return output_message
 
@@ -653,32 +653,32 @@ def get_wrong_intent_message():
 
     if STAGE == 1 and STATE == 1:
         print("WRONG INTENT RECOGNIZED, STATE 1.1")
-        output_message = "I didn't get that. Please call me, and, select a number from one to six."
+        output_message = "I didn't get that. Please call me, and select a number from one to six."
 
     if STAGE == 1 and STATE == 2:
         print("WRONG INTENT RECOGNIZED, STATE 1.2")
-        output_message = "Sorry, I didn't understand that. You selected {}, {}. Is this correct?".format(
+        output_message = "I didn't get that. You selected {}, {}. Is this correct?".format(
             str(selected_procedure),
             str(procedures[selected_procedure - 1]["title"]))
 
     if STAGE == 2 and STATE == 1:
         print("WRONG INTENT RECOGNIZED, STATE 2.1")
-        output_message = "Sorry, I didn't understand that. Right now, you can call me, and let me know when you are ready to start the experiment!".format(
+        output_message = "I didn't get that. Right now, you can call me, and let me know when you are ready to start the experiment!".format(
             selected_procedure_title)
 
     if STAGE == 3 and STATE == 1:
         print("WRONG INTENT RECOGNIZED, STATE 3.1")
-        output_message = "I don't understand what you just said, sorry. Please call me again, and let me know when you want to continue to the next step.".format(
+        output_message = "I didn't get that. Please call me again, and let me know when you want to continue to the next step.".format(
             selected_procedure_title)
 
     if STAGE == 3 and STATE == 2:
         print("WRONG INTENT RECOGNIZED, STATE 3.2")
-        output_message = "Sorry, I didn't get that. You can call me, and ask me to go to the previous step, or, the next step.".format(
+        output_message = "I didn't get that. You can call me, and ask me to go to the previous step, or the next step.".format(
             current_step)
 
     if STAGE == 3 and STATE == 3:
         print("WRONG INTENT RECOGNIZED, STATE 3.3")
-        output_message = "I didn't understand what you're saying. Please call me again, and ask me to go to the previous step, or, to finishe the experiment!".format(
+        output_message = "I didn't get that. Please call me again, and ask me to go to the previous step, or to finishe the experiment!".format(
             current_step)
 
     return output_message
