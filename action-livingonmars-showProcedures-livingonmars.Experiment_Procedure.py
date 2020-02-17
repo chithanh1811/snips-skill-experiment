@@ -255,7 +255,7 @@ def next_step(hermes, intent_message):
     global STAGE, STATE, total_steps, current_step, procedure_steps
 
     # condition so that only at this stage the step related variables are updated
-    if STAGE == 3:
+    if STAGE == 3 and (STATE == 1 or STATE == 2):
         # increase the current step to move to the next
         current_step += 1
         print("The current step is: " + str(current_step))
@@ -293,25 +293,25 @@ def next_step(hermes, intent_message):
                 r = requests.post(GUI_ADDR + "/showstep",
                                   json=procedure_steps["steps"][current_step - 1])
 
-        elif STATE == 3:
-            # Go to STATE FINALE: Finishing the Procedure
-            print("STATE FINALE: Finishing the Procedure")
-            STAGE = 0
-            STATE = 0
-            print("STATE 0.0: Initial")
+    elif STAGE == 3 and STATE == 3:
+        # Go to STATE FINALE: Finishing the Procedure
+        print("STATE FINALE: Finishing the Procedure")
+        STAGE = 0
+        STATE = 0
+        print("STATE 0.0: Initial")
 
-            output_message = "That was the last step. Very good! You have finished the experiment. The session ends here. Let's go back to where we started."
+        output_message = "That was the last step. Very good! You have finished the experiment. The session ends here. Let's go back to where we started."
 
-            # reset all global variables
-            procedures_list = ""
-            selected_procedure = 0
-            selected_procedure_title = ""
-            resources_list = ""
-            current_step = -1
-            procedure_steps = None
-            total_steps = -1
+        # reset all global variables
+        procedures_list = ""
+        selected_procedure = 0
+        selected_procedure_title = ""
+        resources_list = ""
+        current_step = -1
+        procedure_steps = None
+        total_steps = -1
 
-            if isConnected():
+        if isConnected():
                 # send request to GUI API to show the finish screen
                 r = requests.get(GUI_ADDR + "/finish")
 
