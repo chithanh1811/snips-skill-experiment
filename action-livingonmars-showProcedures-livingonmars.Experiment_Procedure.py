@@ -315,7 +315,7 @@ def next_step(hermes, intent_message):
                 # send request to GUI API to show the finish screen
                 r = requests.get(GUI_ADDR + "/finish")
 
-            return hermes.publish_end_session(intent_message.session_id,
+        return hermes.publish_end_session(intent_message.session_id,
                                               output_message)
     else:
         print("Stage {}.{} - Wrong intent detected.".format(STAGE, STATE))
