@@ -134,7 +134,7 @@ def choose_procedure(hermes, intent_message):
 
         # create dialogue output for VUI
         output_message = "You selected {}, {}. Is this correct?".format(
-            str(selected_procedure),
+            str(selected_procedure), # TODO bug here when DB is down??
             str(procedures[selected_procedure - 1]["title"]))
 
         if isConnected():
@@ -268,7 +268,7 @@ def next_step(hermes, intent_message):
             STATE = 2
             print("STATE 3.2: Following the Steps")
             print("The current step is: " + str(current_step))
-            output_message = "To hear the previous step, tell me to go back. Here is step {}, out of {}. {}".format(
+            output_message = "Here is step {}, out of {}. If you need to hear the previous step, tell me to go back. {}".format(
                 current_step, total_steps, step_description)
             if isConnected():
                 # Sending the instructions to the GUI
@@ -479,6 +479,9 @@ def cancel_procedure(hermes, intent_message):
 
     output_message = "You are about to go back to where we started. Are you sure?"
 
+    if isConnected():
+        r = requests.get(GUI_ADDR + "/cancelconfirm")
+
     return hermes.publish_continue_session(intent_message.session_id, output_message, [INTENT_CONFIRM_CANCEL])
 
 # triggered when "livingonmars:confirmExit" is detected
@@ -507,12 +510,15 @@ def confirm_cancel(hermes, intent_message):
 
             output_message = "I have stopped the session. We are now going back to the start."
             if isConnected():
-                r = requests.get(GUI_ADDR + "/cancel")
+                r = requests.post(GUI_ADDR + "/cancel", json={"cancel": True})
 
             return hermes.publish_end_session(intent_message.session_id, output_message)
         else:
             # the answer was no, so the system repeats the message of the current stage
             output_message = get_repeat_message_output()
+            if isConnected():
+                r = requests.post(GUI_ADDR + "/cancel", json={"cancel": False})
+
             return hermes.publish_end_session(intent_message.session_id, output_message)
     else:
         # the slot was empty so the system asks to confirm again
