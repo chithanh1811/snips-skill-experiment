@@ -54,7 +54,7 @@ def hello(hermes, intent_message):
 
     if STAGE == 0 and STATE == 0:
         send("Hello! I can help you with scientific experiments!@regular")
-        #output_message = "Hello! I can help you with scientific experiments. Here is what I can do at any time. You can ask me to repeat. You can ask me to stop. Or you can ask me for help when you don't know what to do. If you want to do an experiment with me, call me after I finishe talking, and say, I want to do an experiment. Enjoy!"
+        output_message = "Hello! I can help you with scientific experiments. Here is what I can do at any time. You can ask me to repeat. You can ask me to stop. Or you can ask me for help when you don't know what to do. If you want to do an experiment with me, call me after I finishe talking, and say, I want to do an experiment. Enjoy!"
     else:
         # get the default message for the current stage
         output_message = get_wrong_intent_message()
